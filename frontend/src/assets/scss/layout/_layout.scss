@@ -1,0 +1,578 @@
+// ============================================
+// LAYOUT
+// ============================================
+
+// Left Sidebar
+.left-sidebar {
+  width: 310px;
+  min-height: 100vh;
+  padding: 100px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+  box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+}
+
+// Toolbar
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #171717;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  z-index: 1000;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  &-brand-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &-logo {
+    flex-shrink: 0;
+  }
+
+  &-brand {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 300;
+    font-size: 1.5rem;
+    letter-spacing: 0.4rem;
+    color: #b4b4b4;
+    text-transform: uppercase;
+  }
+
+  &-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  &-icon {
+    background: transparent;
+    border: none !important;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    outline: none !important;
+    border-radius: 6px;
+
+    &:focus {
+      outline: none !important;
+      border: none !important;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+
+      circle,
+      path,
+      polygon {
+        transition: fill 0.2s ease, stroke 0.2s ease;
+      }
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &:hover svg circle {
+      fill: #1fc4ba;
+    }
+
+    &:hover svg path,
+    &:hover svg polygon {
+      fill: #1bafae;
+      stroke: #ff6b9d;
+    }
+  }
+
+  &-logout-btn:active {
+    transform: scale(0.95);
+  }
+}
+
+// Specific styling for favorites button in toolbar
+#favoritesButton {
+  padding: 0 !important;
+
+  &:hover {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  &:focus {
+    box-shadow: none !important;
+  }
+
+  &:hover svg path {
+    stroke: #ff6b9d;
+    fill: none;
+  }
+}
+
+// Menu
+.menu {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+
+  svg {
+    fill: #676767;
+    stroke: #676767;
+    width: 30px;
+    height: 30px;
+    transition: fill 0.2s ease, stroke 0.2s ease;
+
+    path {
+      fill: #676767;
+    }
+  }
+
+  a:hover svg,
+  a:hover svg path {
+    fill: #999;
+    stroke: #999;
+  }
+}
+
+.menu-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-direction: row-reverse;
+
+  .menu {
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+}
+
+// Logout Button
+.logout-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px 0.25rem 5px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  svg {
+    fill: #676767;
+    stroke: #676767;
+    width: 26px;
+    height: 26px;
+    transition: fill 0.2s ease, stroke 0.2s ease;
+  }
+
+  &:hover svg {
+    fill: #1bafae;
+    stroke: #1bafae;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Settings Ellipsis
+.settings-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  @include transition(all);
+  text-decoration: none;
+
+  svg circle {
+    @include transition(fill);
+  }
+
+  &:hover svg circle {
+    fill: #1fc4ba;
+  }
+}
+
+.mobile-settings-ellipsis {
+  margin-right: 15px;
+}
+
+// Main Container
+.settings-container {
+  width: 90%;
+  border-radius: 20px;
+  padding: 30px;
+  margin: 100px auto;
+  color: $text-primary;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 4px 16px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.6) 0%, rgba(20, 20, 20, 0.8) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  @media( max-width: 768px ) {
+    margin: 30px auto;
+  }
+}
+
+// Card
+.card {
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 2rem;
+
+  @media( max-width: 768px ) {
+    padding: 0px;
+    background: transparent;
+    backdrop-filter: none;
+
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -80px !important;
+}
+
+.subtitle {
+  color: $text-primary;
+}
+
+.home-icon {
+  width: 32px;
+  height: 32px;
+  fill: $text-primary;
+}
+
+// Settings body
+.settings-body {
+  display: block;
+  overflow-y: auto;
+  height: 100vh;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+
+  .menu svg {
+    fill: #676767 !important;
+
+    path {
+      fill: #676767 !important;
+    }
+  }
+
+  .menu a:hover svg,
+  .menu a:hover svg path {
+    fill: #999 !important;
+  }
+}
+
+// Settings Toggle Icon
+.settings-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  &.collapsed svg {
+    transform: rotate(-90deg);
+  }
+}
+
+// ============================================
+// SETTINGS PAGE SPECIFIC STYLES
+// ============================================
+
+// Settings header font weight
+.settings-container h1 {
+  font-weight: 400;
+}
+
+// Hidden status banner
+.status-banner-hidden {
+  display: block;
+  height: 0;
+  width: 0;
+  padding: 0;
+  margin: 0;
+}
+
+// Consent section
+#consentSection {
+  .consent-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    margin-bottom: 20px;
+  }
+
+  .consent-form-container {
+    padding: 20px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .consent-intro {
+    margin: 0 0 15px 0;
+    font-weight: bold;
+    color: #b4b4b4;
+  }
+
+  .checkbox-group label {
+    font-weight: 500;
+  }
+
+  .consent-link {
+    color: #0066cc;
+    text-decoration: underline;
+  }
+
+  .consent-button-container {
+    margin-top: 25px;
+    text-align: center;
+  }
+
+  .consent-accept-btn {
+    font-size: 16px;
+    padding: 12px 40px;
+  }
+
+  .consent-error {
+    color: #d63031;
+    margin-top: 10px;
+    display: none;
+    font-weight: 500;
+  }
+}
+
+// Terms modal
+#termsModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: fit-content;
+  background: transparent;
+  z-index: 10000;
+  overflow-y: auto;
+
+  .terms-modal-content {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #000000;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+    h2 {
+      margin-top: 0;
+    }
+  }
+
+  .terms-content-scroll {
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 15px;
+    background: #000000;
+  }
+
+  .close-terms-btn {
+    margin-top: 20px;
+  }
+}
+
+// Danger zone
+.danger-zone {
+  border-top: 1px solid #444;
+  padding-top: 20px;
+  margin-top: 20px;
+
+  &-label {
+    color: #ff6b6b;
+    font-weight: 600;
+  }
+}
+
+// Small helper text
+.small-help-text {
+  color: #999;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.small-sub-label {
+  color: #999;
+  display: block;
+  margin-left: 0;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+// Avatar section
+.avatar-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.avatar-upload-col {
+  flex: 1;
+}
+
+.avatar-upload-label {
+  display: inline-block;
+  cursor: pointer;
+  padding: 8px 15px;
+  margin: 0;
+}
+
+.avatar-upload-input {
+  display: none;
+}
+
+.avatar-generate-btn {
+  margin-left: 10px;
+}
+
+.avatar-no-image {
+  color: #999;
+}
+
+// Behavior config
+.behavior-config-label {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1em;
+}
+
+// Delete button backgrounds
+.delete-all-conversations-btn {
+  background: #d63031;
+}
+
+.delete-character-conversations-btn {
+  background: #e17055;
+}
+
+// Password change status
+.password-change-status {
+  margin-top: 10px;
+  display: none;
+}
+
+// Interest section labels
+.interest-label {
+  font-size: 0.9em;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+// Life events list
+.life-events-list {
+  margin-bottom: 10px;
+}
+
+.add-life-event-btn {
+  margin-top: 5px;
+}
+
+// Save user settings button
+.save-user-settings-btn {
+  margin-bottom: 30px;
+}
+
+// Music player (index page)
+.music-select {
+  width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 10px center / 18px auto;
+  color: #b4b4b4;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 35px 8px 0;
+  border-radius: 0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+
+  &:hover {
+    background: transparent url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231fc4ba' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 10px center / 18px auto;
+    border-bottom-color: rgba(255, 255, 255, 0.4);
+  }
+
+  &:focus {
+    background: transparent url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231fc4ba' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 10px center / 18px auto;
+    border-bottom-color: #20b2aa;
+  }
+}
+
+.pause-icon-hidden {
+  display: none;
+}
+
+// Hidden utility classes
+.hidden {
+  display: none;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.zero-size {
+  height: 0 !important;
+  width: 0 !important;
+}
+
+hr {
+    opacity: 0.3;
+    border: 0px;
+    background: #ccc;
+    height: 1px;
+    width: 100%;
+}

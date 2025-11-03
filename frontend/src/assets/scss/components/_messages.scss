@@ -1,0 +1,422 @@
+// ============================================
+// MESSAGES
+// ============================================
+
+.chat-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  display: none;
+
+  h1 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin: 0;
+    display: block;
+  }
+}
+
+// Profile Avatar
+.profile-avatar-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.profile-avatar {
+  width: 225px;
+  height: 225px;
+  background: #171717;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.avatar-placeholder {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 0px;
+}
+
+// Status Indicators
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #b4b4b4;
+  margin-bottom: 15px;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-online {
+  background-color: #20b2aa;
+}
+
+.status-offline {
+  background-color: #f44336;
+}
+
+.status-connecting {
+  background-color: #ff9800;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+// Character Switcher (removed from UI)
+// .character-switcher {
+//   position: relative;
+//   top: -16px;
+//   left: 0;
+//   width: 115%;
+// }
+
+// Chat Messages Container
+.chat-messages {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 10px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  background: transparent;
+  color: rgb(207, 207, 207);
+  min-height: 0;
+}
+
+// Messages
+.message {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.4s ease-out;
+
+  &.user {
+    justify-content: flex-end;
+
+    .message-bubble {
+      background: transparent;
+      color: #c9edf1;
+      border-bottom-right-radius: 6px;
+
+      .emote-text {
+        color: rgba(242, 253, 255, 0.7) !important;
+      }
+    }
+
+    .message-meta {
+      align-items: flex-end;
+    }
+  }
+
+  &.bot {
+    justify-content: flex-start;
+
+    .message-bubble {
+      background: transparent;
+      border-bottom-left-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-meta {
+      align-items: flex-start;
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-bubble {
+  max-width: 75%;
+  padding: 15px 18px;
+  border-radius: 20px;
+  position: relative;
+  word-wrap: break-word;
+  background: rgba(110, 110, 110, 0.27) !important;
+  line-height: 1.6;
+  padding-right: 45px; // Add space for favorite button
+}
+
+.user .message-bubble {
+  background: rgba(40, 166, 172, 0.7) !important;
+  padding-right: 45px; // Add space for favorite button
+}
+
+// Emote styling
+.emote-text {
+  color: rgb(143, 143, 143);
+}
+
+// Message Meta
+.message-meta {
+  font-size: 0.75rem;
+  color: #747474;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 0.5rem;
+}
+
+.message-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.emotion-tag {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+// Regenerate Button
+.regenerate-btn {
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 0 6px 4px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+  margin-top: 0px;
+  border: 0px solid transparent !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #1eb2aa;
+    opacity: 1;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Favorite Button
+.favorite-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  border: none !important;
+  outline: none !important;
+  color: #999;
+  cursor: pointer;
+  padding: 10px 12px !important;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  opacity: 0.7;
+  z-index: 10;
+
+  &:hover {
+    background: transparent;
+    opacity: 1;
+  }
+
+  &:focus {
+    outline: none !important;
+    border: none !important;
+  }
+
+  &.favorited {
+    color: #999;
+    opacity: 1;
+
+    svg {
+      fill: currentColor;
+    }
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    transition: fill 0.2s ease;
+  }
+}
+
+// Favorited heart on user messages (no background)
+.user .message-bubble .favorite-btn.favorited {
+  background: transparent;
+  border: none !important;
+  padding: 10px 12px !important;
+}
+
+// Favorited heart on bot messages (no background)
+.bot .message-bubble .favorite-btn.favorited {
+  background: transparent;
+  border: none !important;
+  padding: 10px 12px !important;
+}
+
+// Input Container
+.input-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 15px;
+  background: 0;
+  color: rgba(0, 0, 0, 0.8);
+  border-radius: 15px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-bottom: 0;
+}
+
+.input-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.message-input {
+  width: 100%;
+  min-height: 70px;
+  max-height: 180px;
+  padding: 20px 22px;
+  border: 2px solid #444;
+  border-radius: 50px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  transition: all 0.3s ease;
+  color: #e1e1e1;
+  background: rgba(0, 0, 0, 0.05);
+  position: relative;
+  display: flex;
+  align-items: center;
+  line-height: 1.5;
+
+  &:focus {
+    border: 2px solid rgb(32, 178, 170);
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50px;
+    box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.1);
+  }
+}
+
+// Typing Indicator
+.typing-indicator {
+  display: none;
+  padding: 7px 18px;
+  background: transparent;
+  border-radius: 20px;
+  border-bottom-left-radius: 6px;
+  max-width: 75%;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #999;
+  animation: typing 1.5s infinite;
+
+  &:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  &:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+}
+
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+// Error and Welcome Messages
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin: 10px 0;
+  border-left: 4px solid #f44336;
+  font-size: 0.9rem;
+}
+
+.welcome-message {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.8);
+  margin: 20px 0;
+  display: none;
+  font-style: italic;
+}

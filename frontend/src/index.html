@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oread</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/ambientMusic.css">
+</head>
+
+<body>
+    <div class="toolbar">
+        <a href="/" class="toolbar-brand-link">
+            <svg class="toolbar-logo" width="32" height="31" viewBox="0 0 1016 975" xmlns="http://www.w3.org/2000/svg">
+                <style>
+                    .s0 { fill: #4f4f4f; }
+                    .s1 { fill: #1bafae; }
+                </style>
+                <path id="Layer 1" fill-rule="evenodd" class="s0" d="m508.5 903c-223.69 0-404.5-178.8-404.5-400 0-221.2 180.81-400 404.5-400 223.69 0 404.5 178.8 404.5 400 0 221.2-180.81 400-404.5 400z"/>
+                <path id="Shape 1" fill-rule="evenodd" class="s1" d="m505.12 894.84c-182.56 0-330.12-141.89-330.12-317.42 0-175.53 147.56-317.42 330.12-317.42 182.55 0 330.11 141.89 330.11 317.42 0 175.53-147.56 317.42-330.11 317.42z"/>
+            </svg>
+            <div class="toolbar-brand">OREAD</div>
+        </a>
+        <div class="toolbar-actions">
+            <button id="favoritesButton" class="toolbar-icon" title="Favorites">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#676767" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+            </button>
+            <a href="/settings" class="toolbar-icon" title="Settings">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="5" cy="12" r="2.5" fill="#676767"/>
+                    <circle cx="12" cy="12" r="2.5" fill="#676767"/>
+                    <circle cx="19" cy="12" r="2.5" fill="#676767"/>
+                </svg>
+            </a>
+            <button id="logoutButton" class="toolbar-icon toolbar-logout-btn" title="Logout">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 3.25C12.4142 3.25 12.75 3.58579 12.75 4C12.75 4.41421 12.4142 4.75 12 4.75C7.99594 4.75 4.75 7.99594 4.75 12C4.75 16.0041 7.99594 19.25 12 19.25C12.4142 19.25 12.75 19.5858 12.75 20C12.75 20.4142 12.4142 20.75 12 20.75C7.16751 20.75 3.25 16.8325 3.25 12C3.25 7.16751 7.16751 3.25 12 3.25Z" fill="#676767"/>
+                    <path d="M16.4697 9.53033C16.1768 9.23744 16.1768 8.76256 16.4697 8.46967C16.7626 8.17678 17.2374 8.17678 17.5303 8.46967L20.5303 11.4697C20.8232 11.7626 20.8232 12.2374 20.5303 12.5303L17.5303 15.5303C17.2374 15.8232 16.7626 15.8232 16.4697 15.5303C16.1768 15.2374 16.1768 14.7626 16.4697 14.4697L18.1893 12.75H10C9.58579 12.75 9.25 12.4142 9.25 12C9.25 11.5858 9.58579 11.25 10 11.25H18.1893L16.4697 9.53033Z" fill="#676767"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="left-sidebar">
+        <div class="profile-avatar-container">
+            <div class="profile-avatar" id="profileAvatar">
+                <span class="avatar-placeholder">?</span>
+            </div>
+            <div class="profile-info">
+                <h1 id="profileName">Your AI Roleplay Companion</h1>
+            </div>
+        </div>
+
+        <!-- Ambient Music Player -->
+        <div id="ambient-music-player" class="ambient-player">
+            <div class="ambient-now-playing">
+                <div class="ambient-controls-row">
+                    <div class="ambient-track-info">
+                        <div class="ambient-track-name" id="ambient-track-name">Select a track</div>
+                        <div class="ambient-artist-name" id="ambient-artist-name"></div>
+                        <div class="ambient-attribution">Music from Free Music Archive</div>
+                    </div>
+                    <button id="ambient-play-pause" class="ambient-play-btn-small" title="Play/Pause">
+                        <svg class="play-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 5v14l11-7z" fill="currentColor"/>
+                        </svg>
+                        <svg class="pause-icon pause-icon-hidden" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+                <select id="ambient-track-select" class="ambient-track-select-compact">
+                    <option value="">Select ambient sound...</option>
+                </select>
+            </div>
+        </div>
+    </div>
+   <!-- Mobile Avatar Section (collapsible) -->
+        <div class="mobile-avatar-section" id="mobileAvatarSection">
+            <div class="mobile-avatar-header" onclick="toggleMobileAvatar()">
+                <div class="mobile-avatar-preview">
+                    <div class="mobile-avatar-img" id="mobileAvatarImg">
+                        <span class="avatar-placeholder">?</span>
+                    </div>
+                    <div class="mobile-profile-info">
+                        <h2 id="mobileProfileName">Your AI Roleplay Companion</h2>
+                    </div>
+                </div>
+                <div class="mobile-header-icons">
+                    <a href="/settings" class="mobile-settings-icon" onclick="event.stopPropagation();" title="Settings">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="5" cy="12" r="2.5" fill="#676767"/>
+                            <circle cx="12" cy="12" r="2.5" fill="#676767"/>
+                            <circle cx="19" cy="12" r="2.5" fill="#676767"/>
+                        </svg>
+                    </a>
+                    <span class="collapse-icon" id="collapseIcon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            <div class="mobile-avatar-expanded" id="mobileAvatarExpanded">
+                <div class="mobile-avatar-full" id="mobileAvatarFull">
+                    <span class="avatar-placeholder">?</span>
+                </div>
+
+                <!-- Ambient Music Player for Mobile -->
+                <div class="mobile-ambient-player">
+                    <div class="ambient-now-playing">
+                        <div class="ambient-controls-row">
+                            <div class="ambient-track-info">
+                                <div class="ambient-track-name" id="mobile-ambient-track-name">Select a track</div>
+                                <div class="ambient-artist-name" id="mobile-ambient-artist-name"></div>
+                                <div class="ambient-attribution">Music from Free Music Archive</div>
+                            </div>
+                            <button id="mobile-ambient-play-pause" class="ambient-play-btn-small" title="Play/Pause">
+                                <svg class="play-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 5v14l11-7z" fill="currentColor"/>
+                                </svg>
+                                <svg class="pause-icon pause-icon-hidden" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" fill="currentColor"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <select id="mobile-ambient-track-select" class="ambient-track-select-compact">
+                            <option value="">Select ambient sound...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="chat-container">
+
+        <div class="chat-header">
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                Hey! What's on your mind?
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea id="messageInput" class="message-input" placeholder="Type your message..."
+                    rows="1"></textarea>
+            </div>
+            <button id="sendButton" class="send-button" disabled>
+                ▶
+            </button>
+        </div>
+    </div>
+
+    <!-- Favorites Modal -->
+    <div id="favoritesModal" class="favorites-modal">
+        <div class="favorites-modal-content">
+            <div class="favorites-modal-header">
+                <h2>Favorites</h2>
+                <button id="closeFavoritesModal" class="close-modal-btn">&times;</button>
+            </div>
+            <div id="favoritesContainer" class="favorites-container">
+                <!-- Favorites will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/ambientMusic.js"></script>
+    <script src="/assets/js/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+# Core FastAPI dependencies
+fastapi>=0.115.5
+uvicorn[standard]>=0.32.1
+pydantic>=2.10.3
+python-dotenv>=1.0.0
+
+# ML Model dependencies
+llama-cpp-python>=0.3.2
+transformers>=4.46.3
+torch>=2.6.0
+
+# ONNX optimization
+onnxruntime-gpu
+onnxruntime>=1.20.1
+optimum[onnxruntime]>=1.23.3
+
+# Backend processor dependencies
+pytz
+emoji
+duckduckgo-search
+
+# MCP (Model Context Protocol) - for web search only
+mcp>=1.1.2
+aiofiles>=24.1.0
+aiosqlite>=0.20.0  # Keep for migration script, can remove after
+
+# Vector Memory - keyword-based conversation recall (no sentence-transformers needed)
+chromadb>=0.4.22

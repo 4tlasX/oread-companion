@@ -1,0 +1,438 @@
+"""
+Lorebook Retriever
+Retrieves relevant lorebook chunks based on context during inference
+"""
+from typing import Dict, List, Any, Optional, Set
+import logging
+import re
+
+logger = logging.getLogger(__name__)
+
+
+class LorebookRetriever:
+    """
+    Retrieve relevant lorebook chunks based on:
+    - User message keywords
+    - Detected emotion
+    - Companion type
+    - Conversation context
+    """
+
+    def __init__(self, max_chunks: int = 2):
+        """
+        Initialize retriever.
+
+        Args:
+            max_chunks: Maximum number of chunks to retrieve (excluding always_include)
+        """
+        self.max_chunks = max_chunks
+
+    def retrieve(
+        self,
+        lorebook: Dict[str, Any],
+        user_message: str,
+        emotion: str = 'neutral',
+        companion_type: Optional[str] = None,
+        conversation_history: Optional[List[Dict]] = None,
+        top_emotions: Optional[List[tuple]] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Retrieve relevant lorebook chunks for current context.
+
+        Args:
+            lorebook: Character's lorebook dict
+            user_message: Current user message
+            emotion: Detected emotion (e.g., 'joy', 'sadness', 'anger') - primary emotion
+            companion_type: Type of companion ('romantic', 'friend', etc.)
+            conversation_history: Recent conversation history
+            top_emotions: Optional list of (emotion, confidence) tuples for blended matching
+
+        Returns:
+            List of relevant chunks, sorted by priority
+        """
+        if not lorebook or "chunks" not in lorebook:
+            logger.warning("Empty or invalid lorebook provided")
+            return []
+
+        # Deduplicate chunks by ID to prevent duplicates from accumulating
+        seen_ids = set()
+        unique_chunks = []
+        for chunk in lorebook["chunks"]:
+            chunk_id = chunk.get("id", "")
+            if chunk_id and chunk_id not in seen_ids:
+                seen_ids.add(chunk_id)
+                unique_chunks.append(chunk)
+            elif not chunk_id:
+                # Chunk has no ID, include it but log warning
+                unique_chunks.append(chunk)
+                logger.warning(f"Chunk without ID found: {chunk.get('category', 'unknown')}")
+
+        all_chunks = unique_chunks
+        companion_type = companion_type or lorebook.get("companion_type", "friend")
+
+        if len(lorebook["chunks"]) > len(all_chunks):
+            logger.info(f"Deduplicated {len(lorebook['chunks']) - len(all_chunks)} duplicate chunks")
+
+        logger.debug(
+            f"Retrieving from {len(all_chunks)} chunks | "
+            f"emotion={emotion} | companion={companion_type}"
+        )
+
+        # Filter out romantic/intimate chunks for platonic companions
+        platonic_types = ["friend", "platonic", "companion"]
+        excluded_categories = ["love_language", "physical_intimacy"]
+
+        if companion_type in platonic_types:
+            original_count = len(all_chunks)
+            all_chunks = [
+                chunk for chunk in all_chunks
+                if chunk.get("category") not in excluded_categories
+            ]
+            filtered_count = original_count - len(all_chunks)
+            if filtered_count > 0:
+                logger.info(
+                    f"Filtered out {filtered_count} romantic/intimate chunks "
+                    f"for platonic companion type '{companion_type}'"
+                )
+
+        # Normalize user message for matching
+        message_lower = user_message.lower()
+
+        # Build context from conversation history
+        context_text = self._build_context_text(conversation_history)
+
+        # 1. Get always-include chunks (universal templates and narrative control)
+        # Filter by companion_type if specified in chunk triggers
+        always_include = []
+        for chunk in all_chunks:
+            triggers = chunk.get("triggers", {})
+
+            # Check if this chunk should always be included
+            if triggers.get("always_check") or chunk.get("source") == "universal":
+                # Check if companion_type filtering applies
+                allowed_types = triggers.get("companion_types", [])
+
+                if allowed_types:
+                    # Only include if companion_type matches
+                    if companion_type in allowed_types:
+                        always_include.append(chunk)
+                else:
+                    # No companion_type filter - always include
+                    always_include.append(chunk)
+
+        # 2. Score all other chunks
+        scored_chunks = []
+        for chunk in all_chunks:
+            if chunk in always_include:
+                continue  # Skip already included
+
+            score = self._score_chunk(
+                chunk=chunk,
+                message=message_lower,
+                context=context_text,
+                emotion=emotion,
+                companion_type=companion_type,
+                top_emotions=top_emotions
+            )
+
+            if score > 0:
+                scored_chunks.append((score, chunk))
+
+        # 3. Sort by score (descending), then priority (descending)
+        scored_chunks.sort(key=lambda x: (x[0], x[1]["priority"]), reverse=True)
+
+        # 4. Take top N chunks
+        selected_chunks = [chunk for score, chunk in scored_chunks[:self.max_chunks]]
+
+        # 5. Combine always_include + selected, sort by priority
+        final_chunks = always_include + selected_chunks
+        final_chunks.sort(key=lambda x: x["priority"], reverse=True)
+
+        # Calculate total tokens
+        total_tokens = sum(c.get("tokens", 100) for c in final_chunks)
+
+        logger.info(
+            f"✅ Retrieved {len(final_chunks)} chunks "
+            f"({len(always_include)} always + {len(selected_chunks)} matched) "
+            f"~{total_tokens} tokens"
+        )
+
+        return final_chunks
+
+    def _score_chunk(
+        self,
+        chunk: Dict[str, Any],
+        message: str,
+        context: str,
+        emotion: str,
+        companion_type: str,
+        top_emotions: Optional[List[tuple]] = None
+    ) -> int:
+        """
+        Score a chunk's relevance to current context.
+
+        Args:
+            chunk: Chunk to score
+            message: Normalized user message
+            context: Normalized conversation context
+            emotion: Current emotion (primary)
+            companion_type: Companion type
+            top_emotions: Optional list of (emotion, confidence) tuples for blended matching
+
+        Returns:
+            Relevance score (0 = not relevant, higher = more relevant)
+        """
+        score = 0
+        triggers = chunk.get("triggers", {})
+
+        # Detect intensity/tone modifiers in the message
+        gentle_words = ["soft", "gentle", "tender", "sweet", "light", "subtle", "quiet", "calm", "peaceful", "morning"]
+        intense_words = ["passionate", "hard", "deep", "intense", "urgent", "desperately", "need", "crave", "hunger"]
+
+        is_gentle_context = any(word in message for word in gentle_words)
+        is_intense_context = any(word in message for word in intense_words)
+
+        # 1. Keyword matching (context-aware weight)
+        keywords = triggers.get("keywords", [])
+        if keywords:
+            matched_keywords = 0
+            for keyword in keywords:
+                keyword_lower = keyword.lower()
+                # Check in message (higher weight)
+                if keyword_lower in message:
+                    matched_keywords += 2
+                    base_score = 20
+
+                    # CONTEXT DAMPENING: Reduce score for high-intensity chunks in gentle contexts
+                    chunk_id = chunk.get("id", "")
+                    if is_gentle_context and any(term in chunk_id for term in ["dominant", "aggressive", "intense", "sexual"]):
+                        base_score = 5  # Heavily dampen aggressive chunks
+                        logger.debug(f"Chunk '{chunk_id}': Dampened to {base_score} (gentle context detected)")
+                    elif not is_intense_context and "sexual" in chunk_id:
+                        base_score = 8  # Moderate dampening for sexual chunks without intense context
+                        logger.debug(f"Chunk '{chunk_id}': Dampened to {base_score} (no intense context)")
+
+                    score += base_score
+                # Check in context (lower weight)
+                elif keyword_lower in context:
+                    matched_keywords += 1
+                    score += 5
+
+            if matched_keywords > 0:
+                logger.debug(
+                    f"Chunk '{chunk['id']}': +{score} points "
+                    f"({matched_keywords} keyword matches)"
+                )
+
+        # 2. Emotion matching (high weight - blended from top 3 emotions)
+        trigger_emotions = triggers.get("emotions", [])
+        if trigger_emotions:
+            emotion_score = 0
+
+            # Use top_emotions if available (blended scoring)
+            if top_emotions:
+                for item in top_emotions[:3]:  # Top 3 emotions
+                    # Handle both dict format [{'label': 'joy', 'score': 0.85}, ...]
+                    # and tuple format [('joy', 0.85), ...]
+                    if isinstance(item, dict):
+                        emo = item.get('label')
+                        confidence = item.get('score', 1.0)
+                    else:  # tuple
+                        emo, confidence = item
+
+                    if emo in trigger_emotions:
+                        # Weight by confidence: 25 * confidence (0.0-1.0)
+                        points = int(25 * confidence)
+                        emotion_score += points
+                        logger.debug(f"Chunk '{chunk['id']}': +{points} points (emotion '{emo}' @ {confidence:.2f} confidence)")
+            # Fallback to single emotion
+            elif emotion and emotion in trigger_emotions:
+                emotion_score = 25
+                logger.debug(f"Chunk '{chunk['id']}': +25 points (emotion match: {emotion})")
+
+            score += emotion_score
+
+        # 3. Companion type matching (low weight)
+        trigger_types = triggers.get("companion_types", [])
+        if trigger_types:
+            if companion_type in trigger_types:
+                score += 5
+                logger.debug(f"Chunk '{chunk['id']}': +5 points (companion type match)")
+
+        # 4. Category boost (ensure variety)
+        category = chunk.get("category")
+        if category == "boundary":
+            score += 3  # Always favor boundaries
+        elif category == "affection" and any(kw in message for kw in ["touch", "hug", "kiss", "hold"]):
+            # Boost affection chunks in gentle contexts
+            if is_gentle_context:
+                score += 10  # Prefer tender affection
+            else:
+                score += 5
+        elif category == "communication" and len(message.split()) > 30:
+            score += 3  # Long messages may need communication guidance
+
+        return score
+
+    def _build_context_text(
+        self,
+        conversation_history: Optional[List[Dict]]
+    ) -> str:
+        """
+        Build normalized context text from conversation history.
+
+        Args:
+            conversation_history: List of {role, content} dicts
+
+        Returns:
+            Normalized context string (last 3 messages)
+        """
+        if not conversation_history:
+            return ""
+
+        # Get last 3 messages
+        recent = conversation_history[-3:]
+        context_parts = [msg.get("content", "") for msg in recent if "content" in msg]
+
+        return " ".join(context_parts).lower()
+
+    def format_chunks_for_prompt(
+        self,
+        chunks: List[Dict[str, Any]],
+        section_name: str = "CHARACTER BEHAVIOR GUIDE"
+    ) -> str:
+        """
+        Format retrieved chunks into prompt-ready text.
+
+        Args:
+            chunks: List of chunk dicts
+            section_name: Name of the prompt section
+
+        Returns:
+            Formatted string ready to inject into prompt
+        """
+        if not chunks:
+            return ""
+
+        # Sort by priority (highest first)
+        sorted_chunks = sorted(chunks, key=lambda x: x["priority"], reverse=True)
+
+        # Build formatted output compactly
+        lines = [f"### {section_name} ###"]
+
+        for chunk in sorted_chunks:
+            # Add chunk content
+            content = chunk["content"].strip()
+            lines.append(content)
+
+        lines.append(f"### END {section_name} ###")
+
+        return "\n".join(lines)
+
+    def get_retrieval_stats(
+        self,
+        chunks: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
+        """
+        Get statistics about retrieved chunks.
+
+        Args:
+            chunks: Retrieved chunks
+
+        Returns:
+            Dict with stats
+        """
+        if not chunks:
+            return {
+                "count": 0,
+                "total_tokens": 0,
+                "categories": {},
+                "sources": {}
+            }
+
+        # Category breakdown
+        categories = {}
+        for chunk in chunks:
+            cat = chunk.get("category", "unknown")
+            categories[cat] = categories.get(cat, 0) + 1
+
+        # Source breakdown
+        sources = {}
+        for chunk in chunks:
+            src = chunk.get("source", "unknown")
+            sources[src] = sources.get(src, 0) + 1
+
+        # Token count
+        total_tokens = sum(c.get("tokens", 100) for c in chunks)
+
+        return {
+            "count": len(chunks),
+            "total_tokens": total_tokens,
+            "categories": categories,
+            "sources": sources,
+            "avg_priority": sum(c["priority"] for c in chunks) / len(chunks)
+        }
+
+    def explain_retrieval(
+        self,
+        lorebook: Dict[str, Any],
+        user_message: str,
+        emotion: str = 'neutral'
+    ) -> str:
+        """
+        Explain why certain chunks were retrieved (debugging).
+
+        Args:
+            lorebook: Character's lorebook
+            user_message: User message
+            emotion: Detected emotion
+
+        Returns:
+            Human-readable explanation string
+        """
+        retrieved = self.retrieve(
+            lorebook=lorebook,
+            user_message=user_message,
+            emotion=emotion
+        )
+
+        lines = [
+            f"Retrieved {len(retrieved)} chunks for:",
+            f"  Message: '{user_message[:50]}...'",
+            f"  Emotion: {emotion}",
+            "",
+            "Chunks:"
+        ]
+
+        for i, chunk in enumerate(retrieved, 1):
+            source = chunk.get("source", "unknown")
+            priority = chunk["priority"]
+            chunk_id = chunk["id"]
+
+            lines.append(f"{i}. [{priority}] {chunk_id} (source: {source})")
+
+            # Show why it matched
+            triggers = chunk.get("triggers", {})
+            if triggers.get("always_check") or source == "universal":
+                lines.append("   → Always included (universal)")
+            else:
+                reasons = []
+                keywords = triggers.get("keywords", [])
+                if keywords:
+                    matched = [kw for kw in keywords if kw.lower() in user_message.lower()]
+                    if matched:
+                        reasons.append(f"keywords: {matched}")
+
+                emotions = triggers.get("emotions", [])
+                if emotion in emotions:
+                    reasons.append(f"emotion: {emotion}")
+
+                if reasons:
+                    lines.append(f"   → {', '.join(reasons)}")
+
+        stats = self.get_retrieval_stats(retrieved)
+        lines.append("")
+        lines.append(f"Total tokens: ~{stats['total_tokens']}")
+        lines.append(f"Categories: {stats['categories']}")
+
+        return "\n".join(lines)

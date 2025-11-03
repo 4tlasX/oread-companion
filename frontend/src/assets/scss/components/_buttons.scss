@@ -1,0 +1,145 @@
+// ============================================
+// BUTTONS
+// ============================================
+
+// Base button style
+button:not(.tab-button) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  color: #b0b0b0;
+  border: none;
+  cursor: pointer;
+  @include transition(all);
+  font-size: 1rem;
+  font-weight: 300;
+  background: transparent !important;
+  border: 1px solid #b0b0b0;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    color: #20b2aa;
+    border-color: #20b2aa;
+    box-shadow: 0 2px 8px rgba(32, 178, 170, 0.2);
+  }
+}
+
+// Delete button for life events
+.btn-delete {
+  border: none !important;
+  font-size: 1.15rem !important;
+  padding: 0.5rem 0.75rem;
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    box-shadow: none;
+  }
+}
+
+// Close buttons
+button[class*="close"],
+button[id*="close"],
+.close-btn,
+.modal-close,
+.regenerate-modal-close {
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    box-shadow: none;
+  }
+}
+
+// Delete conversations button
+#deleteConversationsBtn {
+  color: #dc2626;
+  margin-top: 1.5rem;
+  border: 1px solid #dc2626 !important;
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    border-color: #ef4444 !important;
+    color: #ef4444;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+  }
+}
+
+// Logout button
+#logoutButton {
+  border: none !important;
+  padding: 5px 0.45rem 5px 0;
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    box-shadow: none;
+  }
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+// Send Button
+.send-button {
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  min-height: 60px;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #1eb2aa 0%, #17a396 100%) !important;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include transition(all);
+  margin-top: 0.25rem !important;
+  font-size: 1.5rem !important;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  outline: none !important;
+  box-shadow: 0 2px 8px rgba(30, 178, 170, 0.3);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1fc4ba 0%, #19b5a6 100%) !important;
+    box-shadow: 0 4px 12px rgba(31, 196, 186, 0.4) !important;
+    transform: translateY(-2px);
+  }
+
+  &:focus:not(:disabled) {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.2) !important;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &.active {
+    background: linear-gradient(135deg, #20b246 0%, #117a9e 100%) !important;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #24c951 0%, #1490b5 100%) !important;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
+    }
+  }
+
+  &:disabled {
+    background: #333 !important;
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.5;
+    box-shadow: none !important;
+  }
+}

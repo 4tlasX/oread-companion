@@ -1,0 +1,89 @@
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+
+# Logs
+logs/
+
+# Test files
+test/
+
+# Sentiment analysis artifacts
+sentiment-analysis/
+
+# Models (too large for git)
+models/
+*.gguf
+*.bin
+*.safetensors
+
+# User profiles and settings (private data)
+# Exclude all profiles except the default Echo.json and Kairos.json
+data/profiles/*
+data/memory/*
+data/*
+!data/profiles/Echo.json
+!data/profiles/Kairos.json
+!data/profiles/.gitkeep
+
+# Vector database files (ChromaDB)
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+inference/data/memory/
+inference/data/memory/*
+
+# Exclude user-generated content
+data/uploads/*
+!data/uploads/echo-avatar.svg
+!data/uploads/kairos-avatar.svg
+!data/uploads/.gitkeep
+!data/uploads/avatars/
+data/uploads/avatars/*
+!data/uploads/avatars/Echo.svg
+!data/uploads/avatars/Kairos.svg
+!data/uploads/avatars/.gitkeep
+
+data/conversations/
+
+# Backup files
+*.old
+*.bak
+backup_txt/
+
+# llama.cpp library (should be cloned separately)
+llama.cpp/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Python virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# Environment variables (contains secrets)
+backend/.env
+inference/.env
+.env
+.env.local
+
+# SSL certificates (regenerate for each deployment)
+ssl/
+*.pem
+*.key
+*.crt

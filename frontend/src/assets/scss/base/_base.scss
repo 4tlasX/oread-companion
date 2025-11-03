@@ -1,0 +1,85 @@
+// ============================================
+// BASE STYLES
+// ============================================
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-family;
+  font-optical-sizing: auto;
+  background: $dark-bg;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0 0 0 0;
+  color: $text-primary;
+  gap: $spacing-lg;
+}
+
+// Typography
+h1 {
+  color: #b0b0b0;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-family: $font-family;
+  font-weight: 300;
+  letter-spacing: 0.4rem;
+  text-transform: uppercase;
+}
+
+h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  color: $text-primary;
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+  @include transition(color);
+
+  &:hover {
+    color: $primary-hover;
+  }
+}
+
+// Focus styles
+*:focus {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// Selection
+::selection {
+  background: $primary-color;
+  color: $text-primary;
+}
+
+// Smooth scrolling
+html {
+  scroll-behavior: smooth;
+}
+
+// Scrollbar styling
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(50, 232, 252, 0.3);
+  border-radius: 3px;
+
+  &:hover {
+    background: rgba(102, 126, 234, 0.5);
+  }
+}

@@ -1,0 +1,89 @@
+// ============================================
+// TABS
+// ============================================
+
+.tabs-container {
+  margin-top: 2rem;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+}
+
+.tab-button {
+  padding: 1rem 2rem 1rem 0.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  border-width: thin;
+  border-radius: 0;
+  color: #999;
+  font-size: 1rem;
+  font-weight: 300;
+  font-family: $font-family;
+  text-transform: uppercase;
+  line-height: 1.7;
+  letter-spacing: 0.05rem;
+  cursor: pointer;
+  @include transition(all);
+  position: relative;
+  bottom: -2px;
+
+  &:hover:not(:disabled) {
+    color: #1fc4ba;
+    border-bottom-color: rgba(31, 196, 186, 0.3);
+    box-shadow: none !important;
+    border-top-color: transparent !important;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+  }
+
+  &:focus:not(:disabled) {
+    color: #1fc4ba;
+    border-bottom-color: #1fc4ba;
+    box-shadow: none !important;
+    border-top-color: transparent !important;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+    outline: none;
+  }
+
+  &.active {
+    color: #1fc4ba;
+    border-bottom-color: #1fc4ba;
+  }
+}
+
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.3s ease;
+
+  &.active {
+    display: block;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@include mobile {
+  .tab-nav {
+    gap: 0.5rem;
+  }
+
+  .tab-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+}

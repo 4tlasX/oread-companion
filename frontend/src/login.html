@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oread Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #171717;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .logo-symbol {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            position: relative;
+        }
+
+        .logo-symbol svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 16px rgba(27, 175, 174, 0.4));
+        }
+
+        .logo h1 {
+            font-size: 48px;
+            font-weight: 300;
+            color: #fff;
+            letter-spacing: 0.4rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .logo p {
+            color: #999;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #333;
+            color: #fff;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #1bafae;
+            box-shadow: 0 0 0 3px rgba(27, 175, 174, 0.2);
+        }
+
+        input[type="password"]::placeholder {
+            color: #666;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #1bafae;
+            color: #222;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-login:hover {
+            background: #16a09f;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(27, 175, 174, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(204, 51, 51, 0.2);
+            color: #ff6b6b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .default-password {
+            margin-top: 24px;
+            padding: 16px;
+            font-size: 13px;
+            color: #999;
+            text-align: center;
+            line-height: 2;
+        }
+
+        .default-password strong {
+            color: #ccc;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .default-password code {
+            color: #1bafae;
+            background: rgba(27, 175, 174, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-symbol">
+                <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1016 975" width="1016" height="975">
+                    <style>
+                        .s0 { fill: #222222 }
+                        .s1 { fill: #1bafae }
+                    </style>
+                    <path id="Layer 1" fill-rule="evenodd" class="s0" d="m508.5 903c-223.69 0-404.5-178.8-404.5-400 0-221.2 180.81-400 404.5-400 223.69 0 404.5 178.8 404.5 400 0 221.2-180.81 400-404.5 400z"/>
+                    <path id="Shape 1" fill-rule="evenodd" class="s1" d="m505.12 894.84c-182.56 0-330.12-141.89-330.12-317.42 0-175.53 147.56-317.42 330.12-317.42 182.55 0 330.11 141.89 330.11 317.42 0 175.53-147.56 317.42-330.11 317.42z"/>
+                </svg>
+            </div>
+            <h1>OREAD</h1>
+            <p>AI Companion - Privacy First</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                    autofocus
+                >
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">
+                Login
+            </button>
+        </form>
+
+        <div class="default-password">
+            <strong>First Time Setup:</strong>
+            Default password: <code>oreadpassword</code><br>
+            Change this in <code>/settings</code>
+        </div>
+
+        <div class="footer">
+            🔒 All data stays local on your device
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = `https://${window.location.hostname}:${window.location.port || '9000'}`;
+
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const password = passwordInput.value.trim();
+
+            if (!password) {
+                showError('Please enter a password');
+                return;
+            }
+
+            // Disable button during login
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include', // Important for session cookies
+                    body: JSON.stringify({ password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Session is stored in httpOnly cookie - no need to store anything in localStorage
+                    // Just redirect to main app
+                    window.location.href = '/';
+                } else {
+                    showError(data.error || 'Login failed');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Connection error. Make sure the server is running.');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login';
+            }
+        });
+
+        // Allow Enter key to submit
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // Check if already authenticated
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE}/auth/verify`, {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+
+                if (result.authenticated) {
+                    // Already logged in, redirect to main page
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+            }
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>

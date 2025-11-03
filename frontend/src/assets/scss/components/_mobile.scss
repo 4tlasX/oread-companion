@@ -1,0 +1,337 @@
+// ============================================
+// MOBILE & RESPONSIVE STYLES
+// ============================================
+
+// Mobile Avatar Section
+.mobile-avatar-section {
+  display: none;
+  background: $dark-bg;
+  margin-bottom: 15px;
+  margin-top: 0;
+  z-index: $z-dropdown;
+  width: 100%;
+  border-bottom: 1px solid #4b4b4b;
+  padding: 0 15px 5px 15px;
+}
+
+.mobile-avatar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mobile-avatar-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.mobile-avatar-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  background: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .avatar-placeholder {
+    font-size: 1.2rem;
+  }
+}
+
+.mobile-profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+
+  h2 {
+    font-size: 1rem;
+    margin: 0;
+    color: $text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: $font-family;
+    font-weight: 300;
+    letter-spacing: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .status-indicator {
+    margin-top: 5px;
+    color: #ffffff80;
+  }
+}
+
+.mobile-header-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.collapse-icon {
+  color: #999;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  &.expanded svg {
+    transform: rotate(180deg);
+  }
+}
+
+.mobile-settings-icon {
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  padding: 4px;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  svg circle {
+    transition: fill 0.2s ease;
+  }
+
+  &:hover svg circle {
+    fill: #1fc4ba;
+  }
+}
+
+.mobile-avatar-expanded {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 15px;
+
+  &.show {
+    max-height: 680px !important;
+    padding: 15px;
+  }
+}
+
+.mobile-avatar-full {
+  width: 100%;
+  max-width: 100%;
+  height: 300px;
+  border-radius: 10px;
+  background: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #444;
+  margin: 0 auto 15px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .avatar-placeholder {
+    font-size: 2rem;
+  }
+}
+
+// Mobile character switcher (removed from UI)
+// .mobile-character-switcher {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 0;
+//   margin-bottom: 15px;
+
+//   label {
+//     color: #999;
+//     font-size: 0.9rem;
+//     margin-bottom: 0;
+//   }
+
+
+//   select {
+//     color: #d4d4d4;
+//     width: 98%;
+//     -webkit-appearance: none;
+//     -moz-appearance: none;
+//     appearance: none;
+//     border-radius: 0.5rem;
+//     padding: 8px 12px;
+//     border-radius: 8px;
+//     font-size: 0.9rem;
+//     border: 0px solid !important;
+//     cursor: pointer;
+//     background: #222 url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 10px center / 18px auto;
+
+//     &:hover {
+//       background: rgba(255, 255, 255, 0.02) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231fc4ba' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 10px center / 18px auto;
+//     }
+
+//     &:focus {
+//       background: rgba(0, 0, 0, 0.05) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231fc4ba' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 10px center / 18px auto;
+//     }
+//   }
+
+// }
+
+// Mobile Ambient Player (hidden on desktop)
+.mobile-ambient-player {
+  display: none;
+  width: 100%;
+  margin-top: 0;
+
+  .ambient-now-playing {
+    width: 100%;
+  }
+
+  .ambient-play-btn-small {
+    .play-icon {
+      display: flex !important;
+    }
+
+    .pause-icon {
+      display: none !important;
+
+      &:not(.pause-icon-hidden) {
+        display: flex !important;
+      }
+    }
+  }
+}
+
+// Mobile Responsive Breakpoint
+@include mobile {
+  body {
+    flex-direction: column;
+    padding: 60px 0 0 0;
+    overflow-y: auto;
+  }
+
+  .toolbar {
+    padding: 0 5px 0 15px;
+    background: #121212;
+
+    &-brand {
+      font-size: 1.2rem;
+    }
+
+    &-logo {
+      width: 24px;
+      height: 24px;
+      display: none;
+    }
+
+    &-actions {
+      gap: 5px;
+    }
+
+    &-icon {
+      padding: 4px;
+
+      // Hide settings icon on mobile (it's in the mobile avatar preview)
+      &[href="/settings"] {
+        display: none;
+      }
+    }
+  }
+
+  .left-sidebar {
+    display: none;
+  }
+
+  .menu-container {
+    position: fixed;
+    bottom: 110px;
+    right: 20px;
+    top: auto;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .menu.menu-logout {
+    padding: 12px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .logout-btn svg {
+      width: 24px;
+      height: 24px;
+      right: 0px;
+    }
+  }
+
+  .mobile-avatar-section {
+    display: block;
+  }
+
+  .chat-container {
+    height: 75vh;
+    max-width: 100%;
+    padding: 0 15px;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .chat-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .message-bubble {
+    max-width: 85%;
+    padding: 12px 15px;
+  }
+
+  .input-container {
+    padding: 10px;
+  }
+
+  .chat-messages {
+    margin-top: 0;
+  }
+
+  // Hide desktop ambient player on mobile
+  .ambient-player {
+    display: none !important;
+  }
+
+  // Show mobile ambient player
+  .mobile-ambient-player {
+    display: block;
+    width: 100%;
+  }
+
+  .ambient-track-select-compact {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+}

@@ -1,0 +1,56 @@
+// ============================================
+// VARIABLES
+// ============================================
+
+// Colors
+$primary-color: #1bafae;
+$primary-hover: #1fc4ba;
+$dark-bg: #171717;
+$card-bg: #1a1a1a;
+$border-color: rgba(255, 255, 255, 0.1);
+$text-primary: #ffffff;
+$text-secondary: #999;
+$text-muted: #666;
+
+// Danger/Warning
+$danger-color: #d63031;
+$danger-hover: #c0392b;
+$warning-color: #e17055;
+
+// Form elements
+$input-bg: #2a2a2a;
+$input-border: #444;
+$input-focus: $primary-color;
+
+// Spacing
+$spacing-xs: 5px;
+$spacing-sm: 10px;
+$spacing-md: 15px;
+$spacing-lg: 20px;
+$spacing-xl: 30px;
+
+// Typography
+$font-family: "Montserrat", sans-serif;
+$font-size-base: 14px;
+$font-size-lg: 16px;
+$font-size-xl: 20px;
+
+// Borders
+$border-radius: 8px;
+$border-radius-sm: 4px;
+$border-radius-lg: 12px;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.4s ease;
+
+// Shadows
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
+
+// Z-index layers
+$z-toolbar: 1000;
+$z-modal: 10000;
+$z-dropdown: 100;

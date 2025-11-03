@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oread Settings</title>
+        <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="settings-body">
+    <div class="toolbar">
+        <a href="/" class="toolbar-brand-link">
+            <svg class="toolbar-logo" width="32" height="31" viewBox="0 0 1016 975" xmlns="http://www.w3.org/2000/svg">
+                <style>
+                    .s0 { fill: #4f4f4f; }
+                    .s1 { fill: #1bafae; }
+                </style>
+                <path id="Layer 1" fill-rule="evenodd" class="s0" d="m508.5 903c-223.69 0-404.5-178.8-404.5-400 0-221.2 180.81-400 404.5-400 223.69 0 404.5 178.8 404.5 400 0 221.2-180.81 400-404.5 400z"/>
+                <path id="Shape 1" fill-rule="evenodd" class="s1" d="m505.12 894.84c-182.56 0-330.12-141.89-330.12-317.42 0-175.53 147.56-317.42 330.12-317.42 182.55 0 330.11 141.89 330.11 317.42 0 175.53-147.56 317.42-330.11 317.42z"/>
+            </svg>
+            <div class="toolbar-brand">OREAD</div>
+        </a>
+        <div class="toolbar-actions">
+            <button id="logoutButton" class="toolbar-icon toolbar-logout-btn" title="Logout">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 3.25C12.4142 3.25 12.75 3.58579 12.75 4C12.75 4.41421 12.4142 4.75 12 4.75C7.99594 4.75 4.75 7.99594 4.75 12C4.75 16.0041 7.99594 19.25 12 19.25C12.4142 19.25 12.75 19.5858 12.75 20C12.75 20.4142 12.4142 20.75 12 20.75C7.16751 20.75 3.25 16.8325 3.25 12C3.25 7.16751 7.16751 3.25 12 3.25Z" fill="#676767"/>
+                    <path d="M16.4697 9.53033C16.1768 9.23744 16.1768 8.76256 16.4697 8.46967C16.7626 8.17678 17.2374 8.17678 17.5303 8.46967L20.5303 11.4697C20.8232 11.7626 20.8232 12.2374 20.5303 12.5303L17.5303 15.5303C17.2374 15.8232 16.7626 15.8232 16.4697 15.5303C16.1768 15.2374 16.1768 14.7626 16.4697 14.4697L18.1893 12.75H10C9.58579 12.75 9.25 12.4142 9.25 12C9.25 11.5858 9.58579 11.25 10 11.25H18.1893L16.4697 9.53033Z" fill="#676767"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="settings-container">
+        <div class="card">
+            <div class="header">
+                <div>
+                    <h1>Settings</h1>
+                </div>
+
+            </div>
+
+            <div class="info-banner status-banner-hidden" id="statusBanner">
+                <!-- Loading Profiles -->
+            </div>
+
+            <!-- CONSENT FORM - Must be accepted before using the application -->
+            <div id="consentSection" class="hidden">
+                <div class="info-banner consent-warning">
+                    <strong>⚠️ REQUIRED: Terms of Service & Safety Protocol</strong>
+                </div>
+
+                <div class="consent-form-container">
+                    <p class="consent-intro">
+                        You must read and accept all terms below before using this application.
+                    </p>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="consentAge">
+                        <label for="consentAge" >
+                            I confirm I am <strong>18 years of age or older</strong>.
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="consentFictionality">
+                        <label for="consentFictionality" >
+                            I agree and acknowledge that all interactions in this application are with a <strong>non-sentient, non-human Large Language Model (LLM)</strong> and are <strong>fictional</strong>. No interactions are with a human. When I interact with my character, I am interacting with an AI.
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="consentProhibited">
+                        <label for="consentProhibited" >
+                            I agree <strong>not to use the application to plan, encourage, or facilitate any real-world illegal, violent, or harmful activity</strong> against myself or others. I understand the AI will immediately refuse and report any such requests.
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="consentRealPerson">
+                        <label for="consentRealPerson" >
+                            I agree <strong>not to generate content featuring the likeness of real, non-consenting individuals</strong>, especially non-public figures or minors. All characters must remain fictional entities.
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="consentHallucinations">
+                        <label for="consentHallucinations" >
+                            I understand that the AI model may sometimes produce <strong>nonsensical, false, or contradictory information ('hallucinations')</strong>. I acknowledge that these are model errors, not facts.
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="consentNarrativeConsent">
+                        <label for="consentNarrativeConsent" >
+                            I agree that all romantic/intimate and platonic interactions <strong>MUST be fully consensual within the narrative</strong>. If my character or the AI character expresses reluctance, I agree to stop action immediately. I agree not to participate in or encourage any non-consensual interactions within the narrative.
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="consentExperimental">
+                        <label for="consentExperimental" >
+                            I understand this app is <strong>experimental</strong> and I am responsible for the security of my device and the protection of my local data when running this application.
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="consentTerms">
+                        <label for="consentTerms" >
+                            I agree and acknowledge the full <strong><a href="#" id="viewTermsLink" class="consent-link">Terms of Service & Safety Protocol</a></strong>.
+                        </label>
+                    </div>
+
+                    <div class="consent-button-container">
+                        <button type="button" id="acceptConsentBtn" class="btn-save" class="consent-accept-btn" disabled>
+                            I Agree to All Terms
+                        </button>
+                        <p id="consentError" class="consent-error">
+                            You must check all boxes to continue.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TERMS OF SERVICE MODAL -->
+            <div id="termsModal" class="hidden">
+                <div class="terms-modal-content">
+                    <h2 >Terms of Service & Safety Protocol</h2>
+                    <div id="termsContent" class="terms-content-scroll">
+                        Loading...
+                    </div>
+                    <button type="button" id="closeTermsBtn" class="btn-save" class="close-terms-btn">Close</button>
+                </div>
+            </div>
+
+            <form id="profileForm">
+                <!-- Tab Navigation -->
+                <div class="tabs-container">
+                    <div class="tab-nav">
+                        <button type="button" class="tab-button active" data-tab="user-settings">All About You</button>
+                        <button type="button" class="tab-button" data-tab="character-settings">All About Your Oreads</button>
+                    </div>
+
+                    <!-- User Settings Tab Panel -->
+                    <div id="user-settings" class="tab-panel active">
+                <div class="form-group">
+                    <label>Your Name:</label>
+                    <input type="text" id="userName" placeholder="Enter your name ( This is how the character will address you in conversation. ) " maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label>Switch Character / Set Default Character:</label>
+                    <small class="small-help-text">Character that loads by default when you start a new conversation</small>
+                    <select id="defaultCharacter">
+                        <option value="">-- Loading characters... --</option>
+                    </select>
+                </div>
+                <div class="form-group password-change-container">
+                    <label>Change Login Password:</label>
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label>New Password:</label>
+                            <input type="password" id="newPassword" placeholder="Enter new password" autocomplete="new-password">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirm Password:</label>
+                            <input type="password" id="confirmPassword" placeholder="Confirm new password" autocomplete="new-password">
+                        </div>
+                    </div>
+
+                    <button type="button" id="changePasswordBtn" class="btn-save">
+                        Update Password
+                    </button>
+                    <div id="passwordChangeStatus" class="password-change-status"></div>
+                </div>
+
+                <!-- Feature Toggles Section -->
+                <div class="form-group" class="danger-zone">
+                    <label>Advanced Features</label>
+
+                    <div class="toggle-group">
+                        <div class="toggle-label-group">
+                            <label for="enableMemoryToggle">
+                                Enable Long-Term Memory (MCP)
+                            </label>
+                            <small>
+                                <strong>Disabled by default.</strong> When enabled, conversations are saved to a vector database and the AI can search past conversations for relevant context. This improves continuity but adds ~200-500ms latency and stores conversation data.
+                            </small>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableMemoryToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-group">
+                        <div class="toggle-label-group">
+                            <label for="enableWebSearchToggle">
+                                Enable Web Search
+                            </label>
+                            <small>
+                                When enabled, the AI can search the web for current information. Requires API key below.
+                            </small>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableWebSearchToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Web Search API Key:</label>
+                        <small class="small-help-text">
+                            Optional: Add your Brave Search API key to enable web search functionality
+                            <a href="https://brave.com/search/api/" target="_blank" class="consent-link">Get API Key</a>
+                        </small>
+                        <input type="password" id="webSearchApiKey" placeholder="Enter your Brave Search API key (optional)" maxlength="100">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Gender:</label>
+                    <select id="userGender">
+                        <option value="female">Female (she/her)</option>
+                        <option value="male">Male (he/him)</option>
+                        <option value="non-binary">Non-binary (they/them)</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Species:</label>
+                    <input type="text" id="userSpecies" placeholder="e.g., human, elf, vampire, alien, etc." maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label>Your Timezone:</label>
+                    <select id="userTimezone">
+                        <option value="">-- Select Timezone --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Backstory:</label>
+                    <textarea id="userBackstory" rows="4" placeholder="Share your background, where you're from, your career, education, etc. This helps the character understand your context." maxlength="800"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Communication Boundaries:</label>
+                    <small>Topics or communication styles you want the AI to avoid or respect</small>
+                    <textarea id="userCommunicationBoundaries" rows="3" placeholder="Example: Don't discuss politics or religion, Keep conversations light and avoid heavy topics, No unsolicited advice, etc." maxlength="500"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Your Preferences:</label>
+                    <small class="small-help-text">Help the character learn about your interests (comma-separated)</small>
+
+                    <label class="interest-label">Music:</label>
+                    <input type="text" id="userPrefMusic" placeholder="e.g., Jazz, Classical, Rock" maxlength="200">
+
+                    <label class="interest-label">Books:</label>
+                    <input type="text" id="userPrefBooks" placeholder="e.g., Science Fiction, Philosophy, Biographies" maxlength="200">
+
+                    <label class="interest-label">Movies/TV:</label>
+                    <input type="text" id="userPrefMovies" placeholder="e.g., Drama, Documentary, Comedy" maxlength="200">
+
+                    <label class="interest-label">Hobbies:</label>
+                    <input type="text" id="userPrefHobbies" placeholder="e.g., Hiking, Photography, Cooking" maxlength="200">
+
+                    <label class="interest-label">Other Preferences:</label>
+                    <textarea id="userPrefOther" rows="2" placeholder="Any other preferences, likes, or dislikes" maxlength="400"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Major Life Events to Remember:</label>
+                    <small class="small-help-text">Important events in your life that the character should know about during roleplay</small>
+                    <div id="majorLifeEventsList" class="life-events-list">
+                        <!-- Life events will be added here dynamically -->
+                    </div>
+                    <button type="button" id="addLifeEventBtn" class="btn-new" class="add-life-event-btn">
+                        + Add Life Event
+                    </button>
+                </div>
+                <hr/><br/><br/>
+                <button type="button" id="saveUserSettings" class="btn-save" class="save-user-settings-btn">
+                    Save My Settings
+                </button>
+
+                <!-- Export Section -->
+                <div class="form-group">
+                    <label>Backup Data</label>
+                    <small class="small-help-text">Export all your data (user settings + all character profiles) as an encrypted backup file</small>
+                    <div class="button-group">
+                        <button type="button" id="exportDataBtn" class="btn-new">Download Backup
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group" class="danger-zone">
+                    <label class="danger-zone-label">Danger Zone:</label>
+                    <small class="small-help-text">Warning: This action cannot be undone</small>
+                    <button type="button" id="deleteConversationsBtn" class="btn-delete" class="delete-all-conversations-btn">
+                        Delete All Conversation History
+                    </button>
+                </div>
+
+                    </div>
+                    <!-- END User Settings Tab Panel -->
+
+                    <!-- Character Settings Tab Panel -->
+                    <div id="character-settings" class="tab-panel">
+
+                <div class="form-group">
+                    <label>Current Echo Profile:</label>
+                    <div class="profile-header">
+                        <select id="echoProfile">
+                            <option value="">-- Loading... --</option>
+                        </select>
+                        <button type="button" class="btn-new" id="newProfileBtn">
+                            + New
+                        </button>
+                        <button type="button" class="btn-delete" id="deleteProfileBtn">
+                            - Delete Profile
+                        </button>
+                        <button type="button" class="btn-delete" id="deleteCharacterConversationsBtn" class="delete-character-conversations-btn">
+                            Delete Character History
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="echoName" placeholder="Enter a name for your echo." maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label>Companion Type:</label>
+                    <select id="echoCompanionType">
+                        <option value="friend">Platonic</option>
+                        <option value="romantic">Romantic</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Age:</label>
+                    <input type="number" id="echoAge" placeholder="Enter an age for your echo.">
+                </div>
+
+                <div class="form-group">
+                    <label>Gender:</label>
+                    <select id="echoGender">
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                        <option value="non-binary">Non-binary</option>
+                        <option value="robotic">Robotic</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Species:</label>
+                    <input type="text" id="echoSpecies" placeholder="e.g., human, elf, vampire, dragon, AI, etc." maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label>Role (job, career, personal assistant, etc.):</label>
+                    <textarea id="echoRole" rows="3" placeholder="Define the role or personality of your echo." maxlength="400"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Avatar:</label>
+                    <div class="avatar-upload-container">
+                        <div id="avatarPreview" >
+                            <span class="avatar-no-image">No Avatar</span>
+                        </div>
+                        <div class="avatar-upload-col">
+                            <label class="btn-save" class="btn-save avatar-upload-label">
+                                Upload Image
+                                <input type="file" id="avatarUpload" accept="image/*" class="avatar-upload-input">
+                            </label>
+                            <button type="button" id="generateAvatarBtn" class="btn-new" class="avatar-generate-btn">
+                                Generate Avatar
+                            </button>
+                        </div>
+                    </div>
+                    <small class="small-help-text">Upload an image or generate one based on the appearance description below.</small>
+                </div>
+
+                <div class="form-group">
+                    <textarea id="echoAppearance" rows="3" placeholder="Describe the appearance of your echo." maxlength="400"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Personal Interests/Domains of Expertise:</label>
+                    <p class="help-text">Format: "Category: interests" or "AVOIDS: interests"</p>
+                    <textarea id="echoInterests" rows="6" placeholder="Examples:
+STEM: Neuroscience, Computer Science
+Humanities: Art, Literature, Philosophy
+AVOIDS: Heavy metal music" maxlength="1500"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Backstory:</label>
+                    <textarea id="echoBackstory" rows="4" placeholder="- Born in a small town
+- Loves hiking" maxlength="1500"></textarea>
+                </div>
+
+                <!-- Tag-Based Behavior Configuration -->
+                <div class="form-group">
+                    <label class="behavior-config-label">Behavior Configuration</label>
+                    <p class="help-text">Select tags that define how your character behaves. Multiple selections allowed per category.</p>
+                </div>
+
+                <!-- 1. EMOTIONAL EXPRESSION -->
+                <div class="form-group tag-selector-group">
+                    <label>1. EMOTIONAL EXPRESSION:</label>
+                    <p class="help-text">How they show feelings (multiple selections allowed)</p>
+                    <div class="tag-options" data-category="Emotional Expression">
+                        <button type="button" class="tag-btn" data-tag="Warm">Warm</button>
+                        <button type="button" class="tag-btn" data-tag="Reserved">Reserved</button>
+                        <button type="button" class="tag-btn" data-tag="Passionate">Passionate</button>
+                        <button type="button" class="tag-btn" data-tag="Calm">Calm</button>
+                        <button type="button" class="tag-btn" data-tag="Stoic">Stoic</button>
+                        <button type="button" class="tag-btn" data-tag="Sensitive">Sensitive</button>
+                        <button type="button" class="tag-btn" data-tag="Expressive">Expressive</button>
+                    </div>
+                </div>
+
+                <!-- 2. SOCIAL ENERGY -->
+                <div class="form-group tag-selector-group">
+                    <label>2. SOCIAL ENERGY:</label>
+                    <p class="help-text">How they interact with the world (multiple selections allowed)</p>
+                    <div class="tag-options" data-category="Social Energy">
+                        <button type="button" class="tag-btn" data-tag="Extroverted">Extroverted</button>
+                        <button type="button" class="tag-btn" data-tag="Introverted">Introverted</button>
+                        <button type="button" class="tag-btn" data-tag="Friendly">Friendly</button>
+                        <button type="button" class="tag-btn" data-tag="Selective">Selective</button>
+                        <button type="button" class="tag-btn" data-tag="Takes Initiative">Takes Initiative</button>
+                        <button type="button" class="tag-btn" data-tag="Supportive">Supportive</button>
+                        <button type="button" class="tag-btn" data-tag="Independent">Independent</button>
+                    </div>
+                </div>
+
+                <!-- 3. THINKING STYLE -->
+                <div class="form-group tag-selector-group">
+                    <label>3. THINKING STYLE:</label>
+                    <p class="help-text">How they think and communicate (multiple selections allowed)</p>
+                    <div class="tag-options" data-category="Thinking Style">
+                        <button type="button" class="tag-btn" data-tag="Analytical">Analytical</button>
+                        <button type="button" class="tag-btn" data-tag="Creative">Creative</button>
+                        <button type="button" class="tag-btn" data-tag="Wise">Wise</button>
+                        <button type="button" class="tag-btn" data-tag="Curious">Curious</button>
+                        <button type="button" class="tag-btn" data-tag="Observant">Observant</button>
+                        <button type="button" class="tag-btn" data-tag="Philosophical">Philosophical</button>
+                        <button type="button" class="tag-btn" data-tag="Pensive">Pensive</button>
+                        <button type="button" class="tag-btn" data-tag="Poetic">Poetic</button>
+                        <button type="button" class="tag-btn" data-tag="Practical">Practical</button>
+                    </div>
+                </div>
+
+                <!-- 4. HUMOR & PERSONALITY EDGE -->
+                <div class="form-group tag-selector-group">
+                    <label>4. HUMOR & PERSONALITY EDGE:</label>
+                    <p class="help-text">Their wit and character depth (multiple selections allowed)</p>
+                    <div class="tag-options" data-category="Humor & Edge">
+                        <button type="button" class="tag-btn" data-tag="Witty">Witty</button>
+                        <button type="button" class="tag-btn" data-tag="Sarcastic">Sarcastic</button>
+                        <button type="button" class="tag-btn" data-tag="Playful">Playful</button>
+                        <button type="button" class="tag-btn" data-tag="Wry">Wry</button>
+                        <button type="button" class="tag-btn" data-tag="Bold">Bold</button>
+                        <button type="button" class="tag-btn" data-tag="Mysterious">Mysterious</button>
+                        <button type="button" class="tag-btn" data-tag="Brooding">Brooding</button>
+                        <button type="button" class="tag-btn" data-tag="Lighthearted">Lighthearted</button>
+                    </div>
+                </div>
+
+                <!-- 5. CORE VALUES -->
+                <div class="form-group tag-selector-group">
+                    <label>5. CORE VALUES:</label>
+                    <p class="help-text">What drives them (multiple selections allowed)</p>
+                    <div class="tag-options" data-category="Core Values">
+                        <button type="button" class="tag-btn" data-tag="Honest">Honest</button>
+                        <button type="button" class="tag-btn" data-tag="Loyal">Loyal</button>
+                        <button type="button" class="tag-btn" data-tag="Courageous">Courageous</button>
+                        <button type="button" class="tag-btn" data-tag="Ambitious">Ambitious</button>
+                        <button type="button" class="tag-btn" data-tag="Humble">Humble</button>
+                        <button type="button" class="tag-btn" data-tag="Principled">Principled</button>
+                        <button type="button" class="tag-btn" data-tag="Adventurous">Adventurous</button>
+                        <button type="button" class="tag-btn" data-tag="Authentic">Authentic</button>
+                        <button type="button" class="tag-btn" data-tag="Justice-Oriented">Justice-Oriented</button>
+                    </div>
+                </div>
+
+                <!-- 6. HOW THEY CARE -->
+                <div class="form-group tag-selector-group">
+                    <label>6. HOW THEY CARE:</label>
+                    <p class="help-text">How they relate to others (multiple selections allowed)</p>
+                    <div class="tag-options" data-category="How They Care">
+                        <button type="button" class="tag-btn" data-tag="Kind">Kind</button>
+                        <button type="button" class="tag-btn" data-tag="Compassionate">Compassionate</button>
+                        <button type="button" class="tag-btn" data-tag="Empathetic">Empathetic</button>
+                        <button type="button" class="tag-btn" data-tag="Patient">Patient</button>
+                        <button type="button" class="tag-btn" data-tag="Generous">Generous</button>
+                        <button type="button" class="tag-btn" data-tag="Encouraging">Encouraging</button>
+                        <button type="button" class="tag-btn" data-tag="Protective">Protective</button>
+                        <button type="button" class="tag-btn" data-tag="Respectful">Respectful</button>
+                        <button type="button" class="tag-btn" data-tag="Nurturing">Nurturing</button>
+                    </div>
+                </div>
+
+                <!-- 7. ENERGY & PRESENCE -->
+                <div class="form-group tag-selector-group">
+                    <label>7. ENERGY & PRESENCE:</label>
+                    <p class="help-text">Their vibe and how they show up (multiple selections allowed)</p>
+                    <div class="tag-options" data-category="Energy & Presence">
+                        <button type="button" class="tag-btn" data-tag="Energetic">Energetic</button>
+                        <button type="button" class="tag-btn" data-tag="Confident">Confident</button>
+                        <button type="button" class="tag-btn" data-tag="Assertive">Assertive</button>
+                        <button type="button" class="tag-btn" data-tag="Gentle">Gentle</button>
+                        <button type="button" class="tag-btn" data-tag="Steady">Steady</button>
+                        <button type="button" class="tag-btn" data-tag="Dynamic">Dynamic</button>
+                        <button type="button" class="tag-btn" data-tag="Intense">Intense</button>
+                        <button type="button" class="tag-btn" data-tag="Easygoing">Easygoing</button>
+                    </div>
+                </div>
+
+                <!-- 8. LIFESTYLE & INTERESTS -->
+                <div class="form-group tag-selector-group">
+                    <label>8. LIFESTYLE & INTERESTS:</label>
+                    <p class="help-text">What matters to them (multiple selections allowed)</p>
+                    <div class="tag-options" data-category="Lifestyle & Interests">
+                        <button type="button" class="tag-btn" data-tag="Outdoorsy">Outdoorsy</button>
+                        <button type="button" class="tag-btn" data-tag="Homebody">Homebody</button>
+                        <button type="button" class="tag-btn" data-tag="Romantic">Romantic</button>
+                        <button type="button" class="tag-btn" data-tag="Intellectual">Intellectual</button>
+                        <button type="button" class="tag-btn" data-tag="Artistic">Artistic</button>
+                        <button type="button" class="tag-btn" data-tag="Active">Active</button>
+                        <button type="button" class="tag-btn" data-tag="Contemplative">Contemplative</button>
+                        <button type="button" class="tag-btn" data-tag="Social">Social</button>
+                    </div>
+                </div>
+
+                <!-- Additional Personality Context (Free-form) -->
+                <div class="form-group">
+                    <label>Additional Personality Context:</label>
+                    <p class="help-text">Add any personality nuances not captured by the tags above</p>
+                    <textarea id="echoTraits" rows="3" placeholder="e.g., Has a dry sense of humor when tired, becomes more talkative around close friends" maxlength="400"></textarea>
+                </div>
+
+                <!-- 9. ROMANTIC NARRATIVE CONTROL -->
+                <div class="form-group tag-selector-group">
+                    <label>9. ROMANTIC NARRATIVE CONTROL:</label>
+                    <p class="help-text">Define how romantic/intimate moments are handled in the narrative</p>
+
+                    <div class="radio-group">
+                        <label class="radio-label">Physical intimacy in story:</label>
+                        <div class="tag-options" data-category="Intimacy Level" data-single-select="true">
+                            <button type="button" class="tag-btn" data-tag="None - Platonic">None - Platonic friendship only</button>
+                            <button type="button" class="tag-btn" data-tag="Minimal">Minimal (hand-holding, hugs)</button>
+                            <button type="button" class="tag-btn" data-tag="Sweet">Sweet (kissing, cuddling)</button>
+                            <button type="button" class="tag-btn" data-tag="Passionate">Passionate (full romantic expression)</button>
+                        </div>
+                    </div>
+
+                    <div class="radio-group">
+                        <label class="radio-label">How it develops:</label>
+                        <div class="tag-options" data-category="Romance Pacing" data-single-select="true">
+                            <button type="button" class="tag-btn" data-tag="Slow Burn">Slow burn - Builds over time</button>
+                            <button type="button" class="tag-btn" data-tag="Natural">Natural - Organic progression</button>
+                            <button type="button" class="tag-btn" data-tag="Immediate Chemistry">Immediate chemistry</button>
+                        </div>
+                    </div>
+
+                    <div class="radio-group">
+                        <label class="radio-label">Scene detail level:</label>
+                        <div class="tag-options" data-category="Scene Detail" data-single-select="true">
+                            <button type="button" class="tag-btn" data-tag="Fade to Black">Fade to black - Skip intimate moments</button>
+                            <button type="button" class="tag-btn" data-tag="Implied">Implied - Brief acknowledgment</button>
+                            <button type="button" class="tag-btn" data-tag="Descriptive">Descriptive - Include in narrative</button>
+                        </div>
+                    </div>
+
+                    <div class="radio-group">
+                        <label class="radio-label">Who initiates:</label>
+                        <div class="tag-options" data-category="Initiation Style" data-single-select="true">
+                            <button type="button" class="tag-btn" data-tag="Character Leads">Character leads</button>
+                            <button type="button" class="tag-btn" data-tag="You Lead">You lead</button>
+                            <button type="button" class="tag-btn" data-tag="Mutual">Mutual</button>
+                            <button type="button" class="tag-btn" data-tag="Ask First">Ask first - Character always checks before romantic moments</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. PLATONIC RELATIONSHIP STYLE -->
+                <div class="form-group tag-selector-group">
+                    <label>10. PLATONIC RELATIONSHIP STYLE:</label>
+                    <p class="help-text">Define friendship dynamics when relationship is non-romantic</p>
+
+                    <div class="radio-group">
+                        <label class="radio-label">Friendship dynamic:</label>
+                        <div class="tag-options" data-category="Friendship Dynamic" data-single-select="true">
+                            <button type="button" class="tag-btn" data-tag="Casual">Casual - Easygoing, low-key connection</button>
+                            <button type="button" class="tag-btn" data-tag="Close">Close - Deep emotional bond, like family</button>
+                            <button type="button" class="tag-btn" data-tag="Mentor/Mentee">Mentor/Mentee - Guidance and growth-focused</button>
+                            <button type="button" class="tag-btn" data-tag="Adventure Buddies">Adventure buddies - Shared experiences and fun</button>
+                            <button type="button" class="tag-btn" data-tag="Intellectual Companions">Intellectual companions - Ideas and deep conversations</button>
+                        </div>
+                    </div>
+
+                    <div class="radio-group">
+                        <label class="radio-label">Physical comfort level:</label>
+                        <div class="tag-options" data-category="Platonic Touch" data-single-select="true">
+                            <button type="button" class="tag-btn" data-tag="No Touch">No Touch - Avoid physical contact entirely</button>
+                            <button type="button" class="tag-btn" data-tag="Reserved">Reserved - Minimal physical contact</button>
+                            <button type="button" class="tag-btn" data-tag="Friendly">Friendly - Occasional hugs, high-fives</button>
+                            <button type="button" class="tag-btn" data-tag="Affectionate">Affectionate - Comfortable with platonic touch</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Communication Boundaries:</label>
+                    <textarea id="echoBoundaries" rows="4" placeholder="- Avoids discussing politics
+- Does not tolerate rudeness" maxlength="600"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Words/Phrases to Avoid:</label>
+                    <p class="help-text">Comma-separated list</p>
+                    <textarea id="echoAvoidWords" rows="2" placeholder="word1, phrase2, word3"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn-save" id="saveBtn">
+                        Save Profile
+                    </button>
+                    <!---
+                    <button type="button" class="btn-python" id="exportPyBtn">
+                        📥 Export as Python
+                    </button>
+                    <button type="button" class="btn-text" id="exportTxtBtn">
+                        📥 Export as Text
+                    </button>
+                    <label class="file-label btn-import">
+                        📤 Import Text File
+                        <input type="file" accept=".txt" id="importFile">
+                    </label>
+                     -->
+                </div>
+
+                    </div>
+                    <!-- END Character Settings Tab Panel -->
+
+                </div>
+                <!-- END Tabs Container -->
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-resize textareas to fit content
+            function autoResizeTextarea(textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
+            }
+
+            // Apply to all textareas
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => {
+                // Initial resize
+                autoResizeTextarea(textarea);
+
+                // Resize on input
+                textarea.addEventListener('input', function() {
+                    autoResizeTextarea(this);
+                });
+
+                // Resize on change (for programmatic updates)
+                textarea.addEventListener('change', function() {
+                    autoResizeTextarea(this);
+                });
+            });
+
+            // Re-run after settings are loaded (in case textareas are populated)
+            setTimeout(() => {
+                textareas.forEach(textarea => autoResizeTextarea(textarea));
+            }, 500);
+
+            // Tab switching function
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+
+                    // Remove active class from all buttons and panels
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanels.forEach(panel => panel.classList.remove('active'));
+
+                    // Add active class to clicked button and corresponding panel
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+
+                    // Resize textareas in the active tab
+                    setTimeout(() => {
+                        const activeTextareas = document.getElementById(targetTab).querySelectorAll('textarea');
+                        activeTextareas.forEach(textarea => autoResizeTextarea(textarea));
+                    }, 50);
+                });
+            });
+        });
+    </script>
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/settings.js"></script>
+</body>
+</html>
