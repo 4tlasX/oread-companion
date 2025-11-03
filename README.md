@@ -36,31 +36,31 @@ Build your own AI companion using local language models. Chat, roleplay, brainst
 <div align="center">
 
 ### Oread Login
-<img width="1173" height="700" alt="Screenshot 2025-11-02 at 6 39 44 PM" src="https://github.com/user-attachments/assets/734fbf6d-af04-4a0a-8d37-b6157b4e4c2c" />
+<img width="1173" height="700" alt="Screenshot 2025-11-02 at 6 39 44 PM" src="https://github.com/sleddd/oread-companion/blob/f282e86861ddf910582b4f9d6086dc25bf0cb5f4/assets/oread-demo-login.png?raw=true" />
 
 ### Character Creation
 
 *Build unique personalities with customizable traits*
-<img width="1189" height="706" alt="Screenshot 2025-11-02 at 6 40 58 PM" src="https://github.com/user-attachments/assets/bd0e5b40-360d-4137-9e4e-c7422fbd504b" />
+<img width="1189" height="706" alt="Screenshot 2025-11-02 at 6 40 58 PM" src="https://github.com/sleddd/oread-companion/blob/f282e86861ddf910582b4f9d6086dc25bf0cb5f4/assets/oread-demo-character-building-1.png?raw=true" />
 
-<img width="1056" height="597" alt="Screenshot 2025-11-02 at 6 41 11 PM" src="https://github.com/user-attachments/assets/b899fe98-8df5-47dc-b17c-0e5fd21f450c" />
+<img width="1056" height="597" alt="Screenshot 2025-11-02 at 6 41 11 PM" src="https://github.com/sleddd/oread-companion/blob/f282e86861ddf910582b4f9d6086dc25bf0cb5f4/assets/oread-demo-character-building-2.png?raw=true" />
 
-<img width="1071" height="625" alt="Screenshot 2025-11-02 at 6 41 21 PM" src="https://github.com/user-attachments/assets/111c55ff-eeb6-4d2d-9b3b-8e8554e112d3" />
+<img width="1071" height="625" alt="Screenshot 2025-11-02 at 6 41 21 PM" src="https://github.com/sleddd/oread-companion/blob/f282e86861ddf910582b4f9d6086dc25bf0cb5f4/assets/oread-demo-character-building-3.png?raw=true" />
 
 ### Chat Interface
 
 *Clean, responsive design for natural conversations*
-<img width="1180" height="723" alt="oread-demo-wellness" src="https://github.com/user-attachments/assets/5c7070a8-2b92-4645-a8d8-a149e3efc389" />
+<img width="1180" height="723" alt="oread-demo-wellness" src="https://github.com/sleddd/oread-companion/blob/f282e86861ddf910582b4f9d6086dc25bf0cb5f4/assets/oread-demo-chat-1.png?raw=true" />
 
-<img width="1191" height="724" alt="oread-demo-dialogue-2" src="https://github.com/user-attachments/assets/1b1b6a1a-5259-46c5-9d7a-c2fc257e286d" />
+<img width="1191" height="724" alt="oread-demo-dialogue-2" src="https://github.com/sleddd/oread-companion/blob/f282e86861ddf910582b4f9d6086dc25bf0cb5f4/assets/oread-demo-chat-2.png?raw=true" />
 
-<img width="1185" height="745" alt="oread-demo-dialogue-1" src="https://github.com/user-attachments/assets/14d3fa01-0083-4f7a-8a77-081647e870c3" />
+<img width="1185" height="745" alt="oread-demo-dialogue-1" src="https://github.com/sleddd/oread-companion/blob/f282e86861ddf910582b4f9d6086dc25bf0cb5f4/assets/oread-demo-chat-3.png?raw=true" />
 
 ### Settings & Profiles
 
 *Full control over your experience - web search, memory, timezone, define your user profile like you would a character for better roleplay*
 
-<img width="1142" height="737" alt="Screenshot 2025-11-02 at 6 42 08 PM" src="https://github.com/user-attachments/assets/95d4f6d7-3fff-442f-a683-01136c07c2ac" />
+<img width="1142" height="737" alt="Screenshot 2025-11-02 at 6 42 08 PM" src="https://github.com/sleddd/oread-companion/blob/f282e86861ddf910582b4f9d6086dc25bf0cb5f4/assets/oread-demo-settings-1.png?raw=true" />
 
 </div>
 
