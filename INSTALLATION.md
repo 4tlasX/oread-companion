@@ -398,8 +398,7 @@ Good speed, quality, and compatibility.
 - **File:** `Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf` (4.9GB)
 - **RAM Required:** 8GB minimum
 - **Speed:** Very fast inference
-- **Censorship:** Yes (built-in safety)
-- **Best for:** General conversation, reasoning, faster responses
+- **Use case:** General conversation, reasoning, faster responses
 
 ```bash
 cd /path/to/oread/models/
@@ -411,8 +410,7 @@ wget https://huggingface.co/lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/r
 - **File:** `Hermes-3-Llama-3.1-8B.Q4_K_M.gguf` (4.9GB)
 - **RAM Required:** 8GB minimum
 - **Speed:** Very fast
-- **Censorship:** Moderate
-- **Best for:** Roleplay with balanced creativity and safety
+- **Use case:** Roleplay, creative conversation
 
 ```bash
 cd /path/to/oread/models/
@@ -424,8 +422,7 @@ wget https://huggingface.co/NousResearch/Hermes-3-Llama-3.1-8B-GGUF/resolve/main
 - **File:** `Mistral-7B-Instruct-v0.3.Q4_K_M.gguf` (4.4GB)
 - **RAM Required:** 8GB minimum
 - **Speed:** Very fast
-- **Censorship:** Moderate
-- **Best for:** Fast, coherent responses with good instruction following
+- **Use case:** Fast, coherent responses with good instruction following
 
 ```bash
 cd /path/to/oread/models/
@@ -443,36 +440,31 @@ Larger models with better creative writing, slower but higher quality.
 - **File:** `Fimbulvetr-11B-v2.Q4_K_M.gguf` (6.5GB)
 - **RAM Required:** 12GB recommended
 - **Speed:** Moderate
-- **Censorship:** Low
-- **Best for:** Creative writing, descriptive roleplay
+- **Use case:** Creative writing, descriptive roleplay
 
 ```bash
 cd /path/to/oread/models/
 wget https://huggingface.co/mradermacher/Fimbulvetr-11B-v2-GGUF/resolve/main/Fimbulvetr-11B-v2.Q4_K_M.gguf
 ```
 
-#### **MN-Violet-Lotus 12B** (Tested - Uncensored)
-⚠️ **Warning:** Uncensored model with no built-in content restrictions.
-
+#### **MN-Violet-Lotus 12B**
 - **Link:** https://huggingface.co/MaziyarPanahi/MN-Violet-Lotus-12B-v1.1-GGUF
 - **File:** `MN-Violet-Lotus-12B-v1.1.Q4_K_M.gguf` (7.2GB)
 - **RAM Required:** 12GB recommended
 - **Speed:** Moderate
-- **Censorship:** None
-- **Best for:** Maximum creative freedom, uncensored roleplay
+- **Use case:** Creative roleplay
 
 ```bash
 cd /path/to/oread/models/
 wget https://huggingface.co/MaziyarPanahi/MN-Violet-Lotus-12B-v1.1-GGUF/resolve/main/MN-Violet-Lotus-12B-v1.1.Q4_K_M.gguf
 ```
 
-#### **MythoMax L2 13B** (Creative, Less Filtered)
+#### **MythoMax L2 13B**
 - **Link:** https://huggingface.co/TheBloke/MythoMax-L2-13B-GGUF
 - **File:** `mythomax-l2-13b.Q4_K_M.gguf` (7.7GB)
 - **RAM Required:** 14GB recommended
 - **Speed:** Slower
-- **Censorship:** Low
-- **Best for:** Fantasy/creative roleplay
+- **Use case:** Fantasy/creative roleplay
 
 ```bash
 cd /path/to/oread/models/
@@ -485,13 +477,12 @@ wget https://huggingface.co/TheBloke/MythoMax-L2-13B-GGUF/resolve/main/mythomax-
 
 Smallest models for systems with limited RAM (8GB or less).
 
-#### **Phi-3 Mini 4K** (Fast, Surprisingly Capable)
+#### **Phi-3 Mini 4K**
 - **Link:** https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf
 - **File:** `Phi-3-mini-4k-instruct-q4.gguf` (2.4GB)
 - **RAM Required:** 6GB minimum
 - **Speed:** Very fast
-- **Censorship:** Yes
-- **Best for:** Low-end hardware, quick responses
+- **Use case:** Low-end hardware, quick responses
 
 ```bash
 cd /path/to/oread/models/
@@ -503,21 +494,19 @@ wget https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/P
 - **File:** `Llama-3.2-3B-Instruct-Q4_K_M.gguf` (1.9GB)
 - **RAM Required:** 4GB minimum
 - **Speed:** Extremely fast
-- **Censorship:** Yes
-- **Best for:** Very limited hardware
+- **Use case:** Very limited hardware
 
 ```bash
 cd /path/to/oread/models/
 wget https://huggingface.co/lmstudio-community/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf
 ```
 
-#### **StableLM 2 Zephyr 1.6B** (Tiny but Functional)
+#### **StableLM 2 Zephyr 1.6B**
 - **Link:** https://huggingface.co/stabilityai/stablelm-2-zephyr-1_6b-GGUF
 - **File:** `stablelm-2-zephyr-1_6b-Q4_K_M.gguf` (1GB)
 - **RAM Required:** 3GB minimum
 - **Speed:** Extremely fast
-- **Censorship:** Moderate
-- **Best for:** Severely limited hardware, testing
+- **Use case:** Severely limited hardware, testing
 
 ```bash
 cd /path/to/oread/models/
@@ -528,43 +517,40 @@ wget https://huggingface.co/stabilityai/stablelm-2-zephyr-1_6b-GGUF/resolve/main
 
 ### 🏆 Higher Quality (14-70B Models)
 
-Best quality, requires powerful hardware or GPU acceleration.
+Larger models with higher quality outputs, requires powerful hardware or GPU acceleration.
 
 #### **Qwen 2.5 14B Instruct**
 - **Link:** https://huggingface.co/Qwen/Qwen2.5-14B-Instruct-GGUF
 - **File:** `qwen2.5-14b-instruct-q4_k_m.gguf` (8.5GB)
 - **RAM Required:** 16GB minimum
 - **Speed:** Slow on CPU, fast on GPU
-- **Censorship:** Moderate
-- **Best for:** High-quality responses, better reasoning
+- **Use case:** High-quality responses, better reasoning
 
 ```bash
 cd /path/to/oread/models/
 wget https://huggingface.co/Qwen/Qwen2.5-14B-Instruct-GGUF/resolve/main/qwen2.5-14b-instruct-q4_k_m.gguf
 ```
 
-#### **Gemma 2 27B** (Google - Strong Reasoning)
+#### **Gemma 2 27B**
 - **Link:** https://huggingface.co/lmstudio-community/gemma-2-27b-it-GGUF
 - **File:** `gemma-2-27b-it-Q4_K_M.gguf` (16GB)
 - **RAM Required:** 24GB minimum
 - **Speed:** Very slow on CPU, moderate on GPU
-- **Censorship:** Yes
-- **Best for:** Complex reasoning, high-quality outputs
+- **Use case:** Complex reasoning, high-quality outputs
 
 ```bash
 cd /path/to/oread/models/
 wget https://huggingface.co/lmstudio-community/gemma-2-27b-it-GGUF/resolve/main/gemma-2-27b-it-Q4_K_M.gguf
 ```
 
-#### **Llama 3.1 70B Instruct** (Best Quality)
+#### **Llama 3.1 70B Instruct**
 ⚠️ **Warning:** Requires 48GB+ RAM or powerful GPU
 
 - **Link:** https://huggingface.co/lmstudio-community/Meta-Llama-3.1-70B-Instruct-GGUF
 - **File:** `Meta-Llama-3.1-70B-Instruct-Q4_K_M.gguf` (40GB)
 - **RAM Required:** 48GB minimum
 - **Speed:** Extremely slow on CPU
-- **Censorship:** Yes
-- **Best for:** Absolute best quality, research-grade hardware only
+- **Use case:** Highest quality outputs, requires research-grade hardware
 
 ```bash
 cd /path/to/oread/models/
@@ -600,7 +586,7 @@ Once you've downloaded a model:
 | Q6_K         | ~6GB            | Great   | 12GB         |
 | Q8_0         | ~8GB            | Excellent | 14GB       |
 
-**Recommendation:** Q4_K_M for best balance of quality and performance.
+**Note:** Q4_K_M offers a good balance of quality and performance for most hardware.
 
 ---
 
