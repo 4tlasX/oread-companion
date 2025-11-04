@@ -1186,6 +1186,31 @@ select option {
   box-shadow: 0 2px 8px rgba(32, 178, 170, 0.2);
 }
 
+/* Prickly/difficult personality traits - amber/orange theme */
+.tag-btn-prickly {
+  border-color: rgba(255, 159, 64, 0.3);
+  background: rgba(255, 159, 64, 0.05);
+}
+
+.tag-btn-prickly:hover {
+  border-color: #ff9f40;
+  color: #ff9f40;
+  background: rgba(255, 159, 64, 0.12);
+  box-shadow: 0 2px 6px rgba(255, 159, 64, 0.15);
+}
+
+.tag-btn-prickly.selected {
+  background: rgba(255, 159, 64, 0.18);
+  color: #ff9f40;
+  border-color: #ff9f40;
+}
+
+.tag-btn-prickly.selected:hover {
+  background: rgba(255, 159, 64, 0.25);
+  border-color: #ff9f40;
+  box-shadow: 0 2px 8px rgba(255, 159, 64, 0.25);
+}
+
 @media (max-width: 768px) {
   .tag-options {
     gap: 0.4rem;

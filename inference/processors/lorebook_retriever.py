@@ -132,6 +132,13 @@ class LorebookRetriever:
             if chunk in always_include:
                 continue  # Skip already included
 
+            # Check companion_type filter BEFORE scoring
+            triggers = chunk.get("triggers", {})
+            allowed_types = triggers.get("companion_types", [])
+            if allowed_types and companion_type not in allowed_types:
+                # This chunk is restricted to specific companion types and current type doesn't match
+                continue
+
             score = self._score_chunk(
                 chunk=chunk,
                 message=message_lower,

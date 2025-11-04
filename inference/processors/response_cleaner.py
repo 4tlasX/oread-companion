@@ -121,6 +121,12 @@ class ResponseCleaner:
         re.IGNORECASE
     )
 
+    # Remove debug markup like *(<<END>>)* or similar delimiters
+    DEBUG_MARKUP_PATTERN = re.compile(
+        r'\*?\s*\(\s*<<[^>]+>>\s*\)\s*\*?',
+        re.IGNORECASE
+    )
+
     def __init__(self, character_name: str, user_name: str, avoid_patterns: list):
         """
         Initialize cleaner with character-specific settings
@@ -303,7 +309,8 @@ class ResponseCleaner:
                 self.BRACKET_PATTERN.pattern,
                 self.META_INSTRUCTION_PATTERN.pattern,
                 self.FORMAT_ARTIFACT_PATTERN.pattern,
-                self.EMOTION_METADATA_PATTERN.pattern
+                self.EMOTION_METADATA_PATTERN.pattern,
+                self.DEBUG_MARKUP_PATTERN.pattern
             ]
             self._combined_meta_pattern = re.compile('|'.join(f'(?:{p})' for p in meta_patterns), re.IGNORECASE)
 

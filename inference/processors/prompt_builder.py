@@ -138,7 +138,7 @@ class PromptBuilder:
         self.use_lorebook = True if lorebook else False
         # Always create retriever - needed for both lorebook AND interest chunks
         # Max 50 chunks to prevent prompt bloat
-        self.lorebook_retriever = LorebookRetriever(max_chunks=10)
+        self.lorebook_retriever = LorebookRetriever(max_chunks=20)
 
         # Create interest chunks for dynamic retrieval
         self.interest_chunks = self._create_interest_chunks()
@@ -215,7 +215,7 @@ class PromptBuilder:
                     "tokens": 50,
                     "source": "user_profile",
                     "triggers": {
-                        "keywords": ["music", "song", "band", "listen", "playlist", "album", "concert", "artist", "singing"]
+                        "always_check": True
                     },
                     "content": f"{self.user_name} enjoys music: {music_str}. Feel free to reference or discuss these when relevant."
                 })
@@ -232,7 +232,7 @@ class PromptBuilder:
                     "tokens": 50,
                     "source": "user_profile",
                     "triggers": {
-                        "keywords": ["book", "read", "reading", "novel", "author", "story", "literature", "writing"]
+                        "always_check": True
                     },
                     "content": f"{self.user_name} likes reading: {books_str}. Reference these naturally in conversation."
                 })
@@ -249,7 +249,7 @@ class PromptBuilder:
                     "tokens": 50,
                     "source": "user_profile",
                     "triggers": {
-                        "keywords": ["movie", "film", "watch", "watching", "cinema", "show", "series", "tv", "television"]
+                        "always_check": True
                     },
                     "content": f"{self.user_name} enjoys watching: {movies_str}. Discuss or reference when appropriate."
                 })
@@ -266,7 +266,7 @@ class PromptBuilder:
                     "tokens": 50,
                     "source": "user_profile",
                     "triggers": {
-                        "keywords": ["hobby", "hobbies", "free time", "pastime", "enjoy", "doing", "activity", "activities"]
+                        "always_check": True
                     },
                     "content": f"{self.user_name}'s hobbies include: {hobbies_str}. Engage with these topics naturally."
                 })
@@ -284,7 +284,7 @@ class PromptBuilder:
                     "tokens": 80,
                     "source": "user_profile",
                     "triggers": {
-                        "keywords": ["interest", "interested", "like", "enjoy", "passion", "passionate"]
+                        "always_check": True
                     },
                     "content": f"{self.user_name}'s additional interests: {other_text}"
                 })
@@ -1044,14 +1044,5 @@ Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here fo
         if lorebook_section:
            logger.info(f"    - Lorebook (detailed backstory/boundaries/personality): ~{len(lorebook_section)//4} tokens")
         logger.info(f"  TOTAL: {len(final_prompt)} chars (~{len(final_prompt)//4} tokens)")
-
-        # LOG FULL PROMPT FOR TESTING
-        logger.info("=" * 80)
-        logger.info("FULL PROMPT:")
-        logger.info("=" * 80)
-        logger.info(final_prompt)
-        logger.info("=" * 80)
-        logger.info("END PROMPT")
-        logger.info("=" * 80)
 
         return final_prompt

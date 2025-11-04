@@ -100,6 +100,12 @@ class LLMProcessor:
     def reload_character(self):
         """Reload default character profile"""
         try:
+            # Clear all caches to force reload with updated data
+            self._prompt_builder_cache.clear()
+            self._response_cleaner_cache.clear()
+            self._character_data_cache.clear()
+            self._formatted_profile_cache.clear()
+
             # Load default character data
             (
                 character_profile,
@@ -120,11 +126,37 @@ class LLMProcessor:
 
             # Create default PromptBuilder and ResponseCleaner
             # These will be used as templates
-            logger.info(f"✅ Default character loaded")
+            logger.info(f"✅ Default character loaded (caches cleared)")
 
         except Exception as e:
             logger.error(f"❌ Failed to reload default character: {e}", exc_info=True)
             raise
+
+    def clear_character_cache(self, character_name: str):
+        """
+        Clear cached data for a specific character.
+        Call this when a character's profile is updated.
+
+        Args:
+            character_name: Name of character to clear from cache
+        """
+        if character_name in self._prompt_builder_cache:
+            del self._prompt_builder_cache[character_name]
+            logger.debug(f"Cleared prompt builder cache for {character_name}")
+
+        if character_name in self._response_cleaner_cache:
+            del self._response_cleaner_cache[character_name]
+            logger.debug(f"Cleared response cleaner cache for {character_name}")
+
+        if character_name in self._character_data_cache:
+            del self._character_data_cache[character_name]
+            logger.debug(f"Cleared character data cache for {character_name}")
+
+        if character_name in self._formatted_profile_cache:
+            del self._formatted_profile_cache[character_name]
+            logger.debug(f"Cleared formatted profile cache for {character_name}")
+
+        logger.info(f"✅ Cleared all caches for character: {character_name}")
 
     def _load_character_data(self, character_name: Optional[str] = None) -> tuple:
         """
@@ -357,10 +389,7 @@ class LLMProcessor:
                 memory_context=memory_context
             )
 
-            # LOG FULL RAW PROMPT FOR DEBUGGING
-            logger.info("=" * 80)
             logger.info(f"TOTAL PROMPT SIZE: {len(prompt)} chars (~{len(prompt)//4} tokens)")
-            logger.info("=" * 80)
 
             logger.debug(f"Prompt length: {len(prompt)} chars")
             logger.debug(f"Generation params: max_tokens={max_tokens}, temp={temperature}")

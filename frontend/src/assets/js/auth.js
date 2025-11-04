@@ -46,6 +46,9 @@ async function handleLogout() {
         const result = await response.json();
 
         if (result.success) {
+            // Clear session storage (session ID, character selection, etc.)
+            sessionStorage.clear();
+
             // Redirect to login page
             window.location.href = '/login';
         } else {

@@ -74,6 +74,20 @@ export class ProfileController {
 
         // Invalidate profile list cache (in case it's a new profile)
         cache.invalidateProfileList();
+
+        // Clear inference service cache for this character
+        // This ensures avoid words and other settings are reloaded
+        try {
+            const axios = require('axios');
+            const INFERENCE_URL = process.env.INFERENCE_SERVICE_URL || 'http://localhost:8000';
+            await axios.post(`${INFERENCE_URL}/clear_character_cache`, {
+                character_name: sanitizedName
+            });
+            console.log(`✅ Cleared inference cache for character: ${sanitizedName}`);
+        } catch (error) {
+            // Non-fatal - just log the error
+            console.warn(`⚠️ Failed to clear inference cache for ${sanitizedName}:`, error.message);
+        }
     }
 
     /**

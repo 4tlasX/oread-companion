@@ -508,6 +508,36 @@ async def cancel_request(request: Dict[str, Any]):
     }
 
 
+@app.post("/clear_character_cache")
+async def clear_character_cache_endpoint(request: Dict[str, Any]):
+    """
+    Clear cached data for a specific character.
+    Call this after updating a character's profile to ensure
+    avoid words and other settings are reloaded.
+
+    Args:
+        request: Dict with 'character_name'
+
+    Returns:
+        Success status
+    """
+    character_name = request.get('character_name')
+
+    if not character_name:
+        raise HTTPException(status_code=400, detail="character_name is required")
+
+    try:
+        llm_processor.clear_character_cache(character_name)
+        return {
+            "status": "success",
+            "character_name": character_name,
+            "message": f"Cache cleared for character: {character_name}"
+        }
+    except Exception as e:
+        logger.error(f"Failed to clear cache for {character_name}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ----------------------------------------------------------------------
 ## MCP Integration Endpoints
 # ----------------------------------------------------------------------
