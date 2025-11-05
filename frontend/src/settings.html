@@ -661,10 +661,15 @@ AVOIDS: Heavy metal music"></textarea>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-resize textareas to fit content
+            // Auto-resize textareas to fit content with minimum height
             function autoResizeTextarea(textarea) {
+                const minHeight = 200; // Minimum height in pixels
                 textarea.style.height = 'auto';
-                textarea.style.height = textarea.scrollHeight + 'px';
+                const scrollHeight = textarea.scrollHeight;
+                // Use the larger of scrollHeight or minHeight
+                textarea.style.height = Math.max(scrollHeight, minHeight) + 'px';
+                // Also set min-height in CSS for consistency
+                textarea.style.minHeight = minHeight + 'px';
             }
 
             // Apply to all textareas

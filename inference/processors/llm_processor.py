@@ -284,10 +284,18 @@ class LLMProcessor:
 
         # Create ResponseCleaner
         import re
-        avoid_patterns = [
-            re.compile(re.escape(phrase), re.IGNORECASE)
-            for phrase in avoid_words
-        ]
+        avoid_patterns = []
+        for phrase in avoid_words:
+            if phrase:  # Skip empty strings
+                # Use word boundaries for whole-word matching to avoid false positives
+                # This ensures "go" doesn't match "going" unless specified
+                escaped = re.escape(phrase.strip())
+                # Add word boundaries if the phrase starts/ends with word characters
+                if phrase.strip() and phrase.strip()[0].isalnum():
+                    escaped = r'\b' + escaped
+                if phrase.strip() and phrase.strip()[-1].isalnum():
+                    escaped = escaped + r'\b'
+                avoid_patterns.append(re.compile(escaped, re.IGNORECASE))
 
         cleaner = ResponseCleaner(
             character_name=char_name,

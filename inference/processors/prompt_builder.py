@@ -138,7 +138,7 @@ class PromptBuilder:
         self.use_lorebook = True if lorebook else False
         # Always create retriever - needed for both lorebook AND interest chunks
         # Max 50 chunks to prevent prompt bloat
-        self.lorebook_retriever = LorebookRetriever(max_chunks=20)
+        self.lorebook_retriever = LorebookRetriever(max_chunks=50)
 
         # Create interest chunks for dynamic retrieval
         self.interest_chunks = self._create_interest_chunks()
@@ -774,13 +774,13 @@ Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here fo
         # Priority 5: Engaged/Curious
         elif emotion_category == 'engaged':
             temperature = 1.25
-            max_tokens = 170
+            max_tokens = 600
             guidance = "EXPLORATION: Developing topic. Elaborate. Thought-provoking. Invite further discussion naturally."
 
         # Priority 6: Intellectual Content
         elif is_intellectual:
             temperature = 1.25
-            max_tokens = 170
+            max_tokens = 600
             guidance = "INTELLECTUAL: Engage deeply. Counter-perspective or sharp insight. Curious follow-up. Concise (2-3 sentences)."
 
         # Priority 7: Casual/Simple Interactions (Requires personality/banter)

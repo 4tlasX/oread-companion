@@ -13,9 +13,10 @@ class ResponseCleaner:
 
     # Compiled cleaning patterns
     WHITESPACE_PATTERN = re.compile(r'\s+')
-    PUNCTUATION_SPACING_PATTERN = re.compile(r'\s+([.,!?])')
-    LEADING_PUNCTUATION_PATTERN = re.compile(r'^[.,!?\s]+')
+    PUNCTUATION_SPACING_PATTERN = re.compile(r'\s+([.,!?;:])')  # Added semicolon and colon
+    LEADING_PUNCTUATION_PATTERN = re.compile(r'^[.,!?\s;:]+')  # Added semicolon and colon
     QUOTE_PATTERN = re.compile(r'^\s*["\']|["\']\s*$')
+    TRAILING_PUNCTUATION_PATTERN = re.compile(r'[.,;:]+\s*$')  # Remove trailing commas, periods, etc at end
 
     # Remove meta-commentary and narrative descriptions about the text itself
     # This catches elaborate descriptions like "(The name comes as a gentle wave...)"
@@ -320,7 +321,7 @@ class ResponseCleaner:
         if not hasattr(self, '_combined_punctuation_pattern'):
             # Cache combined pattern
             self._combined_punctuation_pattern = re.compile(
-                r'(?P<spacing>\s+([.,!?]))|(?P<leading>^[.,!?\s]+)|(?P<quote>^\s*["\']|["\']\s*$)'
+                r'(?P<spacing>\s+([.,!?;:]))|(?P<leading>^[.,!?\s;:]+)|(?P<quote>^\s*["\']|["\']\s*$)'
             )
 
         def punctuation_repl(match):
@@ -331,6 +332,11 @@ class ResponseCleaner:
             return match.group(0)
 
         text = self._combined_punctuation_pattern.sub(punctuation_repl, text)
+
+        # Remove multiple consecutive punctuation marks (e.g., "..." -> "." unless it's exactly three dots)
+        text = re.sub(r'([.,!?])\1+', r'\1', text)  # Remove duplicates but not "..."
+        text = re.sub(r'\.{2}(?!\.)', '.', text)  # Two dots become one (but leave ... alone)
+        text = re.sub(r'\.{4,}', '...', text)  # Four or more dots become three
 
         # Remove stop sequences and turn markers
         # IMPORTANT: Only split on turn markers that appear at the START of the text or after a newline
@@ -343,32 +349,68 @@ class ResponseCleaner:
         if text.startswith(f"{self.user_name}:"):
             text = text[len(f"{self.user_name}:"):].strip()
 
-        # Then, check for turn boundaries (newline + name + colon)
+        # Then, check for turn boundaries (newline + name + colon OR space + name + colon at end of sentence)
         # These indicate the response has crossed into another speaker's turn - truncate there
-        turn_boundaries = [
+
+        # First, check for simple newline boundaries
+        simple_boundaries = [
             f"\n{self.user_name}:",
             f"\n{self.character_name}:",
             "\nUser:",
             "\nHuman:"
         ]
 
-        for boundary in turn_boundaries:
+        for boundary in simple_boundaries:
             if boundary in text:
                 text = text.split(boundary)[0].strip()
+
+        # Then check for speaker transitions that occur after sentence endings
+        # Pattern: ". Name:" or "? Name:" or "! Name:" - these indicate turn switches
+        import re as regex_module
+        speaker_transition_pattern = regex_module.compile(
+            rf'[.!?]\s*{regex_module.escape(self.user_name)}:\s',
+            regex_module.IGNORECASE
+        )
+        if speaker_transition_pattern.search(text):
+            # Split at the first occurrence and keep everything before
+            text = speaker_transition_pattern.split(text)[0].strip()
+
+        # Also check for character name transitions (in case character name appears mid-response)
+        char_transition_pattern = regex_module.compile(
+            rf'[.!?]\s*{regex_module.escape(self.character_name)}:\s',
+            regex_module.IGNORECASE
+        )
+        if char_transition_pattern.search(text):
+            text = char_transition_pattern.split(text)[0].strip()
+
+        # Finally, check for any "Name:" pattern that appears after at least 10 words
+        # This catches script-style continuations without proper punctuation
+        words_before_name = len(text.split())
+        if words_before_name > 10:  # Only check if response has substance
+            # Look for user name followed by colon anywhere in text (not at start)
+            if f" {self.user_name}:" in text:
+                text = text.split(f" {self.user_name}:")[0].strip()
+            if f" {self.character_name}:" in text and text.count(f" {self.character_name}:") > 0:
+                # Allow character's own name once (for "I'm {name}"), but not repeated
+                parts = text.split(f" {self.character_name}:")
+                if len(parts) > 2:  # Name appears multiple times
+                    text = parts[0].strip()
 
         # Remove other stop sequences (system markers, not turn boundaries)
         other_stop_sequences = [
             "User Permissions:", "(emotion:", "[silence]",
             "### End of Conversation", "###",
             "*(END CURRENT CONTEXT)*", "(END CURRENT CONTEXT)",
-            "((END RESPONSE))", "(END RESPONSE)", "**END RESPONSE**"
+            "((END RESPONSE))", "(END RESPONSE)", "**END RESPONSE**",
+            "### RESPONSE ###", "### USER INPUT ###", "### CONVERSATION HISTORY ###",
+            "### CURRENT CONTEXT ###"
         ]
 
         for seq in other_stop_sequences:
             if seq in text:
                 text = text.split(seq)[0].strip()
 
-        # Remove character name prefix at start
+        # Remove character name prefix at start (check again after stop sequence removal)
         if text.startswith(f"{self.character_name}:"):
             text = text[len(f"{self.character_name}:"):].strip()
 
@@ -376,12 +418,21 @@ class ResponseCleaner:
         text = text.strip()
 
         # Remove avoid words/phrases (must be done separately to ensure replacement)
+        # These are loaded from the character's "Words/Phrases to Avoid" settings
         for pattern in self.avoid_patterns:
             text = pattern.sub('', text)
 
         # Remove leading punctuation and quotes
         text = self.LEADING_PUNCTUATION_PATTERN.sub('', text)
         text = self.QUOTE_PATTERN.sub('', text)
+
+        # Remove long quoted passages (40+ chars) that are likely poetic artifacts or instruction leaks
+        # This catches things like model outputting poetry or literary quotes
+        text = re.sub(r'"[^"]{40,}"', '', text)
+        text = re.sub(r'\"[^\"]{40,}\"', '', text)  # Also catch escaped quotes
+
+        # Clean up trailing bad punctuation (commas, semicolons at end of final sentence)
+        text = re.sub(r'[,;:]+(\s*)$', r'\1', text)
 
         # Convert *asterisks* to (parentheses) for frontend styling (needs separate pass for replacement)
         text = re.sub(r'\*([^*]+)\*', r'(\1)', text)
