@@ -74,9 +74,8 @@ class LLMProcessor:
         self.default_character_name = None
         self.user_name = "User"
 
-        # Cache for character-specific prompt builders and cleaners
+        # Cache for character-specific prompt builders (avoid words are NOT cached)
         self._prompt_builder_cache: Dict[str, PromptBuilder] = {}
-        self._response_cleaner_cache: Dict[str, ResponseCleaner] = {}
         self._character_data_cache: Dict[str, tuple] = {}
         self._formatted_profile_cache: Dict[str, str] = {}  # Cache for formatted character strings
 
@@ -102,7 +101,6 @@ class LLMProcessor:
         try:
             # Clear all caches to force reload with updated data
             self._prompt_builder_cache.clear()
-            self._response_cleaner_cache.clear()
             self._character_data_cache.clear()
             self._formatted_profile_cache.clear()
 
@@ -143,10 +141,6 @@ class LLMProcessor:
         if character_name in self._prompt_builder_cache:
             del self._prompt_builder_cache[character_name]
             logger.debug(f"Cleared prompt builder cache for {character_name}")
-
-        if character_name in self._response_cleaner_cache:
-            del self._response_cleaner_cache[character_name]
-            logger.debug(f"Cleared response cleaner cache for {character_name}")
 
         if character_name in self._character_data_cache:
             del self._character_data_cache[character_name]
@@ -250,63 +244,35 @@ class LLMProcessor:
         logger.debug(f"Created PromptBuilder for character")
         return prompt_builder
 
-    def _get_response_cleaner_for_character(self, character_name: Optional[str] = None) -> ResponseCleaner:
+    def _create_response_cleaner(self, char_name: str, user_name: str, avoid_words: list) -> ResponseCleaner:
         """
-        Get a ResponseCleaner for the specified character with caching.
+        Create a ResponseCleaner with avoid word patterns.
+        Avoid words are NEVER cached - always compiled fresh from the provided list.
 
         Args:
-            character_name: Name of character, or None for default
+            char_name: Character name
+            user_name: User name
+            avoid_words: List of words/phrases to remove from responses
 
         Returns:
             ResponseCleaner instance
         """
-        # Use default if no character specified
-        if not character_name:
-            character_name = self.default_character_name
-
-        # Check cache first
-        if character_name in self._response_cleaner_cache:
-            return self._response_cleaner_cache[character_name]
-
-        # Load character data (cached)
-        (
-            _,
-            char_name,
-            avoid_words,
-            user_name,
-            _,
-            _,
-            _,  # character_role not needed for ResponseCleaner
-            _,  # character_backstory not needed for ResponseCleaner
-            _,  # lorebook not needed for ResponseCleaner
-            _,  # personality_tags not needed for ResponseCleaner
-        ) = self._load_character_data(character_name)
-
-        # Create ResponseCleaner
         import re
         avoid_patterns = []
         for phrase in avoid_words:
-            if phrase:  # Skip empty strings
-                # Use word boundaries for whole-word matching to avoid false positives
-                # This ensures "go" doesn't match "going" unless specified
+            if phrase:
                 escaped = re.escape(phrase.strip())
-                # Add word boundaries if the phrase starts/ends with word characters
                 if phrase.strip() and phrase.strip()[0].isalnum():
                     escaped = r'\b' + escaped
                 if phrase.strip() and phrase.strip()[-1].isalnum():
                     escaped = escaped + r'\b'
                 avoid_patterns.append(re.compile(escaped, re.IGNORECASE))
 
-        cleaner = ResponseCleaner(
+        return ResponseCleaner(
             character_name=char_name,
             user_name=user_name,
             avoid_patterns=avoid_patterns
         )
-
-        # Cache it
-        self._response_cleaner_cache[character_name] = cleaner
-
-        return cleaner
 
     async def generate_response(
             self,
@@ -579,14 +545,17 @@ class LLMProcessor:
                     character_boundaries=character_boundaries
                 )
 
-                # Get response cleaner for this character
-                response_cleaner = self._get_response_cleaner_for_character(char_name)
+                # Create ResponseCleaner with fresh avoid_words from Node.js (never cached)
+                response_cleaner = self._create_response_cleaner(char_name, user_name, avoid_words)
             else:
                 # Fallback to loading from disk (legacy)
                 logger.warning("⚠️  No character_profile provided, falling back to disk load")
                 prompt_builder = self._get_prompt_builder_for_character(character_name)
-                response_cleaner = self._get_response_cleaner_for_character(character_name)
                 char_name = character_name or self.default_character_name
+
+                # Load character data to get avoid words
+                (_, _, avoid_words, user_name, *_) = self._load_character_data(char_name)
+                response_cleaner = self._create_response_cleaner(char_name, user_name, avoid_words)
 
             # 1. Fetch memory context if not provided via search_context
             memory_context = await self.context_manager.fetch_memory_context(

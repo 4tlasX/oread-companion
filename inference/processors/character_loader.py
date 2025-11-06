@@ -162,11 +162,6 @@ def load_default_character_profile() -> Tuple[str, str, List[str], str, str, str
         char_role = profile.get('role', '')
         char_backstory = profile.get('backstory', '')
         avoid_words_str = profile.get('avoidWords', '')
-        avoid_words = [
-            word.strip().lower()
-            for word in avoid_words_str.split(',')
-            if word.strip()
-        ]
         companion_type = profile.get('companionType', 'friend').lower()
 
         # CRITICAL: Validate character age (MUST be 25+)
@@ -386,7 +381,7 @@ def load_character_by_name(character_name: str) -> Tuple[str, str, List[str], st
         char_backstory = profile.get('backstory', '')
         avoid_words_str = profile.get('avoidWords', '')
         avoid_words = [
-            word.strip().lower()
+            word.strip()  # Don't lowercase - regex uses IGNORECASE flag
             for word in avoid_words_str.split(',')
             if word.strip()
         ]

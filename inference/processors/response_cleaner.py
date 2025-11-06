@@ -141,124 +141,50 @@ class ResponseCleaner:
         self.user_name = user_name
         self.avoid_patterns = avoid_patterns
 
-    def _remove_duplicates(self, text: str) -> str:
-        """
-        Remove consecutive duplicate text that sometimes appears in model output.
-
-        For example: "Hello there. Hello there." -> "Hello there."
-
-        Args:
-            text: Input text that may contain duplicates
-
-        Returns:
-            Text with consecutive duplicates removed
-        """
+    @staticmethod
+    def _remove_duplicates(text: str) -> str:
+        """Remove consecutive duplicate text: "Hello. Hello." -> "Hello." """
         if not text or len(text) < 20:
             return text
-
-        # Split text into chunks and check for consecutive repetition
         words = text.split()
         if len(words) < 5:
             return text
-
-        # Check for repeated sequences of various lengths (from half the text down to 5 words)
-        max_sequence_len = min(len(words) // 2, 30)
-
-        for seq_len in range(max_sequence_len, 4, -1):
-            # Check if the last seq_len words repeat the previous seq_len words
+        max_len = min(len(words) // 2, 30)
+        for seq_len in range(max_len, 4, -1):
             if len(words) >= seq_len * 2:
-                first_half = ' '.join(words[-seq_len * 2:-seq_len])
-                second_half = ' '.join(words[-seq_len:])
-
-                # If we find a duplicate, remove the second occurrence
-                if first_half == second_half:
+                if ' '.join(words[-seq_len * 2:-seq_len]) == ' '.join(words[-seq_len:]):
                     return ' '.join(words[:-seq_len])
-
         return text
 
-    def _truncate_to_sentences(self, text: str, max_sentences: int = 3) -> str:
-        """
-        Truncate text to a maximum number of sentences naturally
-
-        Args:
-            text: Input text to truncate
-            max_sentences: Maximum number of sentences to keep (default: 3)
-
-        Returns:
-            Truncated text with complete sentences
-        """
+    @staticmethod
+    def _truncate_to_sentences(text: str, max_sentences: int = 3) -> str:
+        """Truncate to max sentences naturally"""
         if not text:
             return text
-
-        # Split on sentence boundaries while preserving actions in parentheses
-        # Match period, exclamation, or question mark followed by space/end
-        # but not if it's inside parentheses (actions)
-        sentence_pattern = re.compile(r'([.!?]+)(?=\s+[A-Z(]|\s*$)')
-
-        parts = sentence_pattern.split(text)
+        parts = re.split(r'([.!?]+)(?=\s+[A-Z(]|\s*$)', text)
         sentences = []
-        current_sentence = ""
-
-        for i, part in enumerate(parts):
-            if i % 2 == 0:
-                # Text part
-                current_sentence += part
-            else:
-                # Punctuation part
-                current_sentence += part
-                sentences.append(current_sentence.strip())
-                current_sentence = ""
-
-        # Add any remaining text as a sentence if it exists
-        if current_sentence.strip():
-            sentences.append(current_sentence.strip())
-
-        # Take only the first max_sentences
+        for i in range(0, len(parts) - 1, 2):
+            sentences.append(parts[i] + (parts[i + 1] if i + 1 < len(parts) else ''))
+        if len(parts) % 2 == 1 and parts[-1].strip():
+            sentences.append(parts[-1])
         if len(sentences) > max_sentences:
             result = ' '.join(sentences[:max_sentences])
-            # Ensure it ends with proper punctuation
             if result and result[-1] not in '.!?':
                 result += '.'
             return result
-
         return text
 
-    def _flatten_nested_actions(self, text: str) -> str:
-        """
-        Flatten nested action parentheses into a single action.
-
-        Example:
-        "(chuckles softly, (takes your hand), (runs thumb over your knuckles))"
-        becomes:
-        "(chuckles softly, takes your hand, runs thumb over your knuckles)"
-
-        Args:
-            text: Input text with potential nested parentheses
-
-        Returns:
-            Text with flattened action parentheses
-        """
-        # Find action blocks that contain nested parentheses
-        # Match outer parentheses that contain inner ones
-        def flatten_match(match):
-            content = match.group(1)
-            # Remove all inner parentheses, keeping just the content
-            flattened = re.sub(r'[()]', '', content)
-            # Clean up extra commas and spaces
-            flattened = re.sub(r',\s*,', ',', flattened)
-            flattened = re.sub(r'\s+', ' ', flattened)
-            return f"({flattened.strip()})"
-
-        # Match parentheses that contain other parentheses
-        # This pattern finds outer parens containing nested ones
-        pattern = r'\(([^()]*\([^)]*\)[^()]*)\)'
-
-        # Keep replacing until no more nested parens exist
-        prev_text = None
-        while prev_text != text:
-            prev_text = text
-            text = re.sub(pattern, flatten_match, text)
-
+    @staticmethod
+    def _flatten_nested_actions(text: str) -> str:
+        """Flatten nested parentheses: "(a, (b), (c))" -> "(a, b, c)" """
+        def flatten(match):
+            content = re.sub(r'[()]', '', match.group(1))
+            content = re.sub(r',\s*,', ',', content)
+            return f"({re.sub(r'\s+', ' ', content).strip()})"
+        prev = None
+        while prev != text:
+            prev = text
+            text = re.sub(r'\(([^()]*\([^)]*\)[^()]*)\)', flatten, text)
         return text
 
     def clean(self, text: str) -> str:
@@ -417,10 +343,14 @@ class ResponseCleaner:
         # Clean up again
         text = text.strip()
 
-        # Remove avoid words/phrases (must be done separately to ensure replacement)
-        # These are loaded from the character's "Words/Phrases to Avoid" settings
-        for pattern in self.avoid_patterns:
-            text = pattern.sub('', text)
+        # Remove avoid words/phrases
+        if self.avoid_patterns:
+            for pattern in self.avoid_patterns:
+                text = pattern.sub('', text)
+
+        # Clean up multiple spaces and fix spacing around punctuation
+        text = self.WHITESPACE_PATTERN.sub(' ', text)
+        text = re.sub(r'\s+([.,!?;:])', r'\1', text)  # Remove space before punctuation
 
         # Remove leading punctuation and quotes
         text = self.LEADING_PUNCTUATION_PATTERN.sub('', text)
