@@ -235,8 +235,9 @@ class LorebookRetriever:
                 # Format content from tone + action
                 tone = matched_response.get("tone", "")
                 action = matched_response.get("action", "")
+                emotion_priority = matched_response.get("priority", None)
 
-                # Only include non-empty sections
+                # Only include non-empty sections in content
                 content_parts = []
                 if tone:
                     content_parts.append(f"**Tone:** {tone}")
@@ -253,6 +254,12 @@ class LorebookRetriever:
 
                 # Update tokens from emotion-specific response
                 new_chunk["tokens"] = matched_response.get("tokens", chunk.get("tokens", 70))
+
+                # Update priority from emotion-specific response if provided
+                # Priority is used for sorting/ordering, not displayed in content
+                if emotion_priority is not None:
+                    new_chunk["priority"] = emotion_priority
+                    logger.debug(f"Updated priority for '{chunk['id']}' to {emotion_priority} based on emotion '{matched_emotion}'")
 
                 logger.debug(
                     f"Processed '{chunk['id']}' with emotion '{matched_emotion}': "

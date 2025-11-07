@@ -88,7 +88,9 @@ async def lifespan(app: FastAPI):
                 n_threads=config.llm_n_threads,
                 n_gpu_layers=config.llm_n_gpu_layers,
                 n_batch=config.llm_n_batch,  # Pass batch size from config
-                memory_service=memory_service  # Pass vector memory to LLM
+                memory_service=memory_service,  # Pass vector memory to LLM
+                use_mmap=config.llm_use_mmap,  # Memory-mapped loading
+                use_mlock=config.llm_use_mlock  # Memory locking (disabled on macOS)
             )
 
             # Initialize - this is an async method that loads the model
@@ -142,6 +144,14 @@ async def lifespan(app: FastAPI):
 
     # ** SHUTDOWN LOGIC **
     logger.info("Shutting down Inference Service")
+
+    # Shutdown LLM processor and unload model
+    try:
+        if llm_processor and hasattr(llm_processor, 'cleanup'):
+            llm_processor.cleanup()
+            logger.info("✅ LLM processor cleanup complete")
+    except Exception as e:
+        logger.error(f"Error cleaning up LLM processor: {e}")
 
     # Shutdown emotion detector
     try:

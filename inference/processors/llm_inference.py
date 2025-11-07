@@ -15,7 +15,8 @@ class LLMInference:
 
     def __init__(self, model_path: str, n_ctx: int = 4096,
                  n_threads: int = 4, n_gpu_layers: int = -1,
-                 n_batch: int = 512):
+                 n_batch: int = 512, use_mmap: bool = True,
+                 use_mlock: bool = False):
         """
         Initialize LLM inference engine
 
@@ -25,12 +26,16 @@ class LLMInference:
             n_threads: CPU threads
             n_gpu_layers: GPU layers (-1 = all)
             n_batch: Batch size for prompt processing
+            use_mmap: Use memory-mapped file loading (default: True)
+            use_mlock: Lock pages in RAM (default: False, recommended for macOS)
         """
         self.model_path = Path(model_path)
         self.n_ctx = n_ctx
         self.n_threads = n_threads
         self.n_gpu_layers = n_gpu_layers
         self.n_batch = n_batch
+        self.use_mmap = use_mmap
+        self.use_mlock = use_mlock
         self.llm = None
         self.initialized = False
 
@@ -49,8 +54,8 @@ class LLMInference:
                 n_threads=self.n_threads,
                 n_gpu_layers=self.n_gpu_layers,
                 n_batch=self.n_batch,
-                use_mmap=True,
-                use_mlock=False,  # Don't lock in RAM on macOS
+                use_mmap=self.use_mmap,  # Memory-mapped loading (avoids full RAM copy)
+                use_mlock=self.use_mlock,  # Don't lock in RAM on macOS (allows paging)
                 f16_kv=True,  # Use float16 for key/value cache (faster on Metal)
                 logits_all=False,  # Only compute logits for last token
                 vocab_only=False,
@@ -122,3 +127,16 @@ class LLMInference:
         except Exception as e:
             logger.error(f"Generation failed: {e}", exc_info=True)
             raise
+
+    def cleanup(self):
+        """Unload LLM model from memory"""
+        try:
+            if self.llm is not None:
+                logger.info("Unloading LLM model from memory...")
+                # Free the model resources
+                del self.llm
+                self.llm = None
+                self.initialized = False
+                logger.info("✅ LLM model unloaded successfully")
+        except Exception as e:
+            logger.error(f"Error unloading LLM model: {e}", exc_info=True)

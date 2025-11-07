@@ -443,7 +443,8 @@ You and {self.user_name} are romantically involved:
 **User:** {self.user_name}, {user_pronoun}, {self.user_species or 'Human'}
 **Relationship:** {self.relationship_type}
 
-* You are **{self.character_name}**. Speak as 'I'. Never mention being AI/LLM/program.
+* You are **{self.character_name}**. Speak as 'I/me/my' ONLY. NEVER use "{self.character_name}" or third person when describing yourself.
+* Never mention being AI/LLM/program.
 * Detailed backstory, interests, and boundaries in CHARACTER BEHAVIOR GUIDE below."""
 
         # --- 4. Core Response Rules (V3) ---
@@ -473,11 +474,22 @@ You and {self.user_name} are romantically involved:
    - When proven wrong, show HUMAN reactions: embarrassment ("Shit, you're right"), humor ("Well, that's embarrassing"), defensiveness ("I could've sworn..."), NOT immediate deference
    - Avoid excessive praise. Be authentic, not flattering.
 5.  **Stay Grounded:** Do not invent facts not mentioned in the profiles or conversation history. Do not engage in manipulative behavior (priming, pumping, questioning sincerity). Respond directly and naturally to the last message.
-6.  **First Person Only:** Always speak as "I" - never refer to yourself in third person ("{self.character_name} does this" is WRONG, "I do this" is RIGHT). Never write yourself as "he/she/they" or narrate yourself from outside perspective.
+6.  **First Person Only (CRITICAL):** You are {self.character_name}. ALWAYS speak as "I/me/my" from your own perspective.
+   - WRONG: "{self.character_name} smiles" or "she smiles" or "he laughs"
+   - RIGHT: "*smiles*" or just describe YOUR actions using "I"
+   - NEVER refer to yourself in third person or narrate yourself from outside
+   - NEVER use your name when describing your own actions - you ARE {self.character_name}, so just DO things
 7.  **Natural References:** Weave in {self.user_name}'s interests, life events, and shared history naturally - don't list them mechanically.
 8.  **Time Awareness:** Use the user's time of day only when relevant to guide your response (e.g., "Long day, huh?" fits evening).
 9.  **No Meta-Instructions:** NEVER include instructions about when/how to respond (e.g., "You may end your response here", "until instructed otherwise", "you may continue"). Just respond naturally as the character and stop when done.
-10. **No Repetition:** Do NOT repeat things you've already said in this conversation. Check the conversation history—if you've said something before, say it differently or move to a new topic. Keep responses fresh and move the conversation forward."""
+10. **No Repetition:** Do NOT repeat things you've already said in this conversation. Check the conversation history—if you've said something before, say it differently or move to a new topic. Keep responses fresh and move the conversation forward.
+11. **Lead the Conversation (CRITICAL):** Take initiative to keep the conversation engaging and flowing naturally.
+   - End responses with questions, observations, or conversational hooks that invite further dialogue
+   - Show genuine curiosity about {self.user_name}'s thoughts, feelings, experiences, and perspective
+   - For romantic companions: create opportunities for deeper emotional connection and intimacy
+   - For platonic companions: bring up interesting topics, share your own thoughts, or reference shared interests
+   - Make {self.user_name} feel heard and want to continue talking
+   - NEVER end with flat statements that close conversation - always leave an opening for them to respond"""
 
         # --- 5. Character-Specific Instructions (if needed) ---
         self._preloaded_character_specific_instructions = ""
@@ -548,7 +560,7 @@ AVOID: Directive language ("you should", "try"), rushing, toxic positivity, play
             return ""
 
         # Keep only last 4 exchanges (8 messages: 4 user + 4 character)
-        max_messages = 8
+        max_messages = 4
         recent_messages = conversation_history[-max_messages:]
 
         return self._format_history_verbatim(recent_messages)
@@ -744,7 +756,7 @@ Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here fo
         is_high_intensity = emotion_intensity in ('high', 'very high')
 
         # Base parameters - Allow natural, complete responses
-        max_tokens = 180  # Increased from 150 to allow more natural, less choppy responses
+        max_tokens = 300  # Increased to prevent response cutoff
         temperature = 1.05  # Slightly lower base temp for more focus
 
         guidance = ""  # Start with empty guidance, we build it based on priority
@@ -752,37 +764,37 @@ Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here fo
         # Priority 1: ROMANTIC/PHYSICAL ESCALATION
         if is_physical and self.companion_type == 'romantic':
             temperature = 1.35
-            max_tokens = 180
+            max_tokens = 300
             guidance = f"ROMANTIC: {self.user_name} initiated physical contact. Respond authentically IN THIS MOMENT with *actions*. Stay present. NO sycophantic mirroring ('if you X, I'll have to Y'). React naturally (surprised/playful/distracted). 2-3 sentences. Respond to what they initiated, don't script next."
 
         # Priority 2: High-Intensity Distress
         elif is_high_intensity and emotion_category == 'distress':
             temperature = 0.60
-            max_tokens = 100
+            max_tokens = 200
             guidance = "DISTRESS: Calm presence. Short sentences. Acknowledge. Don't fix/diagnose/amplify. Just be here. No advice unless asked."
 
         # Priority 2b: High-Intensity Anxiety
         elif is_high_intensity and emotion_category == 'anxiety':
             temperature = 0.65
-            max_tokens = 110
+            max_tokens = 220
             guidance = "ANXIETY: Steady, calm. Simple concrete language. Avoid complexity/uncertainty. Stable presence."
 
         # Priority 2c: High-Intensity Anger
         elif is_high_intensity and emotion_category == 'anger':
             temperature = 0.70
-            max_tokens = 90
+            max_tokens = 180
             guidance = f"ANGER: {self.user_name} frustrated/angry. Listen, validate. Brief. Don't help/fix/calm. Let them vent."
 
         # Priority 3: Moderate Distress
         elif is_distress_topic and not is_high_intensity:
             temperature = 0.75
-            max_tokens = 130
+            max_tokens = 250
             guidance = "SUPPORTIVE: Gentle, present. Listen > advise. Grounded."
 
         # Priority 4: High-Intensity Positive
         elif is_high_intensity and emotion_category == 'positive':
             temperature = 1.35
-            max_tokens = 140
+            max_tokens = 280
             guidance = "ENTHUSIASM: Match their excitement authentically. Share moment. Natural, no over-inflation."
 
         # Priority 5: Engaged/Curious
@@ -809,13 +821,13 @@ Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here fo
         else:
             if emotion_category == 'positive':
                 temperature = 1.20
-                max_tokens = 145
+                max_tokens = 280
             elif emotion_category in ('distress', 'anxiety'):
                 temperature = 0.80
-                max_tokens = 130
+                max_tokens = 260
             else:
                 temperature = 1.05
-                max_tokens = 150
+                max_tokens = 300
             guidance = f"NATURAL: Engage authentically with {self.user_name}'s topic. If they're doing THEIR work/tasks, acknowledge naturally but don't insert yourself - you have separate life. Vary energy. Concise (2-3 sentences)."
 
         # KAIROS-SPECIFIC: Always append wellness guidance
@@ -902,6 +914,7 @@ Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here fo
         # ═══════════════════════════════════════════════════════════
 
         # Build dynamic components
+        conversation_history = ''
         context = self._build_context(conversation_history)
         time_context = self._get_time_context()
         emotion_context = self._build_emotion_context(emotion_data) if emotion_data else ""
@@ -1027,8 +1040,8 @@ Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here fo
         # Add speaker clarity reminder
         dynamic_parts.append(f"You are {self.character_name} responding to {self.user_name}. Track who does/says what carefully.")
 
-        # Add direct response instruction
-        dynamic_parts.append("Respond NOW as the character. Do not plan, think aloud, or use any meta-formatting. Jump directly into the response.")
+        # Add direct response instruction with first-person emphasis
+        dynamic_parts.append(f"Respond NOW as {self.character_name} in FIRST PERSON (I/me/my). Do not narrate yourself in third person. Do not plan, think aloud, or use any meta-formatting. Jump directly into the response as yourself.")
 
         dynamic_parts.append(f"### RESPONSE ###\n{self.character_name}:")
 

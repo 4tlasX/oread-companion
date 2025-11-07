@@ -39,7 +39,9 @@ class LLMProcessor:
             n_threads: int = 4,
             n_gpu_layers: int = 999,
             n_batch: int = 512,
-            memory_service=None
+            memory_service=None,
+            use_mmap: bool = True,
+            use_mlock: bool = False
     ):
         """
         Initialize LLM processor with all components
@@ -51,6 +53,8 @@ class LLMProcessor:
             n_gpu_layers: GPU layers (-1 = all)
             n_batch: Batch size for prompt processing
             memory_service: Optional vector memory service
+            use_mmap: Use memory-mapped file loading (default: True)
+            use_mlock: Lock pages in RAM (default: False, recommended for macOS)
         """
         self.model_path = Path(model_path)
         self.initialized = False
@@ -61,7 +65,9 @@ class LLMProcessor:
             n_ctx=n_ctx,
             n_threads=n_threads,
             n_gpu_layers=n_gpu_layers,
-            n_batch=n_batch
+            n_batch=n_batch,
+            use_mmap=use_mmap,  # Memory-mapped loading (avoid full RAM copy)
+            use_mlock=use_mlock  # Don't lock pages in RAM on macOS
         )
 
         self.prompt_builder: Optional[PromptBuilder] = None
@@ -694,3 +700,35 @@ class LLMProcessor:
         except Exception as e:
             logger.error(f"❌ Error generating starter: {e}", exc_info=True)
             return f"Hey there! How's your day going?"
+
+    def cleanup(self):
+        """Cleanup LLM processor and unload model from memory"""
+        try:
+            logger.info("Cleaning up LLM processor...")
+            if self.llm_inference and hasattr(self.llm_inference, 'cleanup'):
+                self.llm_inference.cleanup()
+            self.initialized = False
+            logger.info("✅ LLM processor cleanup complete")
+        except Exception as e:
+            logger.error(f"Error cleaning up LLM processor: {e}", exc_info=True)
+
+    def _get_response_cleaner_for_character(self, character_name: Optional[str] = None) -> ResponseCleaner:
+        """
+        Get ResponseCleaner for the specified character.
+        Avoid words are NEVER cached - always loaded fresh.
+
+        Args:
+            character_name: Name of character, or None for default
+
+        Returns:
+            ResponseCleaner instance
+        """
+        # Use default if no character specified
+        if not character_name:
+            character_name = self.default_character_name
+
+        # Load character data (cached, but avoid_words are always fresh)
+        (_, char_name, avoid_words, user_name, *_) = self._load_character_data(character_name)
+
+        # Create ResponseCleaner with fresh avoid_words (never cached)
+        return self._create_response_cleaner(char_name, user_name, avoid_words)

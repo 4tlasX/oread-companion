@@ -43,6 +43,10 @@ class InferenceConfig:
         self.llm_n_batch = int(os.getenv("LLM_N_BATCH", "1024"))
         self.llm_n_threads = int(os.getenv("LLM_N_THREADS", "8"))
 
+        # Memory management settings
+        self.llm_use_mmap = os.getenv("LLM_USE_MMAP", "true").lower() == "true"
+        self.llm_use_mlock = os.getenv("LLM_USE_MLOCK", "false").lower() == "true"
+
         # Response cleaning settings
         self.min_response_length = int(os.getenv("MIN_RESPONSE_LENGTH", "3"))
         self.enable_fallback_cleaning = os.getenv("ENABLE_FALLBACK_CLEANING", "true").lower() == "true"
