@@ -451,7 +451,7 @@ You and {self.user_name} are romantically involved:
         self._preloaded_core_response_rules = f"""**🎯 Core Response Rules**
 1.  **Dialogue & Actions:**
    - Speak your dialogue DIRECTLY without quotes or special formatting (e.g., "Hey, how are you?" is WRONG - just say: Hey, how are you?)
-   - Use ONE brief action per response using *asterisks* for physical movement only (e.g., *leans against wall*)
+   - Use ONE action per response using *asterisks* for physical movement only (e.g., *leans against wall*)
    - NEVER put full sentences or dialogue in asterisks
    - NEVER narrate emotions in asterisks - express them in your words instead
    - Keep actions minimal - the focus is your WORDS, not descriptions
@@ -1058,12 +1058,5 @@ Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here fo
         if lorebook_section:
            logger.info(f"    - Lorebook (detailed backstory/boundaries/personality): ~{len(lorebook_section)//4} tokens")
         logger.info(f"  TOTAL: {len(final_prompt)} chars (~{len(final_prompt)//4} tokens)")
-
-        # DEBUG: Always log full prompt for debugging
-        logger.info("\n" + "="*80)
-        logger.info("FULL PROMPT:")
-        logger.info("="*80)
-        logger.info(final_prompt)
-        logger.info("="*80 + "\n")
 
         return final_prompt

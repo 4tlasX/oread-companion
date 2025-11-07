@@ -80,7 +80,7 @@ class ContextManager:
                 if memory_lines:
                     memory_context = "\n".join([
                         "\n### RELEVANT CONTEXT FROM PAST CONVERSATIONS:",
-                        "These are related topics we've discussed before. Use them for continuity, but respond naturally to the current message.",
+                        f"These are optional reference points from previous chats - you may acknowledge IF directly relevant, but DO NOT assume they're part of current conversation. Focus on what {user_name} just said NOW, not past discussions.",
                         *memory_lines,
                         "### END CONTEXT\n"
                     ])
