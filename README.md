@@ -1,4 +1,4 @@
-# Oread - Your Privacy-First AI Companion
+# Oread - Your Privacy-First AI LLM Interface
 
 <div align="center">
 
@@ -18,13 +18,13 @@
 
 Named after the Oreads (Ὀρειάδες) of Greek mythology—mountain nymphs who were loyal companions to the gods—**Oread** brings that same companionship to your computer, minus the mythology and corporate data mining.
 
-It's a **self-hosted AI companion interface** that runs entirely on your machine. No cloud. No tracking. No sketchy terms of service. Just you, your computer, and an AI friend that stays between you two.
+It's a **self-hosted AI LLM interface** that runs entirely on your machine. No cloud. No tracking. No sketchy terms of service. Just you, your computer, and an AI friend that stays between you two.
 
 > **⚠️ Pre-Release Software** - Works well, but expect bugs and ongoing improvements. Think "beta testing" phase.
 
 ### The Core Idea
 
-Build your own AI companion using local language models. Chat, roleplay, brainstorm ideas, or just hang out. All conversations stay on your machine—Oread never phones home.
+Give your AI LLM a bit of personality. The idea is to provide a model agnostic interface that allows you to give your LLM a personality, so that you can use it for anything from chat and discussion to roleplay with complete privacy. All conversations stay on your machine—Oread never phones home. Currently, it is formatted to work best with roleplay LLMs, but there will be changes in the future to ensure it is more widely supported.
 
 **You bring the model** (like downloading an app), **Oread provides the interface** (think of it as the operating system for your AI companion).
 
