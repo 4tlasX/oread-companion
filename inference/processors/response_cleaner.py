@@ -290,23 +290,48 @@ class ResponseCleaner:
             text = re.sub(r'\(([^()]*\([^)]*\)[^()]*)\)', flatten, text)
         return text
 
-    def clean(self, text: str) -> str:
+    def clean(self, text: str, user_message: str = "") -> str:
         """
         Apply all final cleaning steps to raw LLM output
 
         Args:
             text: Raw LLM output text
+            user_message: The user's original message (to detect goodnight)
 
         Returns:
             Cleaned text ready for user
         """
         text = text.strip()
 
-        # Check if this is a SIMPLE goodnight message (3-5 words only)
+        # CRITICAL: FORCE goodnight response when user says goodnight
+        # This ALWAYS returns "Goodnight {username} ❤️" regardless of what the AI generated
+        user_said_goodnight = bool(re.search(r'\b(?:good\s*night|goodnight|sleep\s*well|sweet\s*dreams)\b', user_message, re.IGNORECASE))
+        if user_said_goodnight:
+            # Extract any optional phrase from AI response (after goodnight)
+            ai_said_goodnight_match = re.search(r'\b(?:good\s*night|goodnight)\b(.{0,30}?)(?:[.!?]|$)', text, re.IGNORECASE)
+            optional_phrase = ""
+            if ai_said_goodnight_match:
+                optional_phrase = ai_said_goodnight_match.group(1).strip()
+                # Clean up the optional phrase - remove emojis, extra punctuation
+                optional_phrase = re.sub(r'[❤️💕💖🥰😘]', '', optional_phrase)
+                optional_phrase = re.sub(r'[,.]', '', optional_phrase).strip()
+                # Limit to 4 words max
+                words = optional_phrase.split()
+                if len(words) > 4:
+                    optional_phrase = ""
+
+            # FORCE the correct format
+            if optional_phrase:
+                return f"Goodnight {self.user_name} ❤️"
+                #return f"Goodnight {self.user_name} ❤️ {optional_phrase}"
+            else:
+                return f"Goodnight {self.user_name} ❤️"
+
+        # Check if this is a SIMPLE goodnight message (up to 8 words)
         # Heart emoji ONLY allowed in brief goodnight messages like "Goodnight Name ❤️"
         is_goodnight = bool(re.search(r'\b(?:good\s*night|goodnight|sleep\s*well|sweet\s*dreams)\b', text, re.IGNORECASE))
         word_count = len(text.split())
-        is_simple_goodnight = is_goodnight and word_count <= 5
+        is_simple_goodnight = is_goodnight and word_count <= 8
 
         # Preserve heart emojis ONLY for simple goodnight messages
         heart_placeholder = "<<<HEART_EMOJI>>>"

@@ -401,7 +401,7 @@ If you're dealing with these situations in real life, please reach out to approp
         user_said_goodnight = bool(re.search(r'\b(?:good\s*night|goodnight|sleep\s*well|sweet\s*dreams)\b', text, re.IGNORECASE))
 
         if user_said_goodnight:
-            return f"GOODNIGHT: Simple variation with {self.user_name}'s name and heart. 3-4 words max.", 60, 0.85
+            return f"GOODNIGHT: 'Goodnight {self.user_name} ❤️' optionally followed by 1 brief phrase. Keep total under 8 words.", 50, 0.75
         elif user_sent_heart:
             return f"HEART: Brief warm response with heart. 2-4 words max.", 60, 0.85
 

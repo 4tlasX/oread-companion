@@ -384,7 +384,7 @@ class LLMProcessor:
             logger.debug(f"Raw response: {tokens_generated} tokens")
 
             # 5. Clean the response
-            cleaned_response = response_cleaner.clean(raw_response)
+            cleaned_response = response_cleaner.clean(raw_response, user_message=text)
 
             logger.info(f"✅ Generated response: {len(cleaned_response)} chars, {tokens_generated} tokens")
 
@@ -632,7 +632,7 @@ class LLMProcessor:
                     raise RuntimeError("Request cancelled by client")
 
             # 6. Clean the response
-            cleaned_response = response_cleaner.clean(raw_response)
+            cleaned_response = response_cleaner.clean(raw_response, user_message=text)
 
             logger.info(f"✅ Context-aware generation: {len(cleaned_response)} chars, {tokens_generated} tokens")
 
