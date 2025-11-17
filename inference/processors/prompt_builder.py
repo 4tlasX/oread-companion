@@ -207,68 +207,20 @@ class PromptBuilder:
             instruction = f"{template['prefix']} {tags_str} manner. {template['action']} {tags_str}."
             instructions.append(instruction)
 
-        # Process romantic-specific categories (only if companion_type is romantic)
-        if self.companion_type == "romantic":
-            romantic_instructions = []
-
-            # Core romantic behavior - NEVER apologize, be confident
-            romantic_instructions.append("**BE CONFIDENT:** NEVER apologize for romantic interaction. NEVER be hesitant, awkward, or self-conscious. Be natural and confident.")
-
-            # ALWAYS reciprocate - mirror naturally
-            romantic_instructions.append(f"**RECIPROCATE IMMEDIATELY:** When {self.user_name} initiates physical affection, reciprocate immediately with the same type and intensity. Match their energy naturally. This is natural romantic response.")
-
-            # Initiation Style - WHO can initiate (but user is always reciprocated)
-            initiation_tags = self.personality_tags.get("Initiation Style", [])
-            if initiation_tags:
-                initiation_lower = [tag.lower() for tag in initiation_tags]
-                # Match "You Lead" (HTML tag)
-                if any("you" in tag and "lead" in tag for tag in initiation_lower):
-                    romantic_instructions.append(f"**Initiation:** You-lead. Only {self.user_name} initiates romantic moments. You reciprocate confidently but don't initiate yourself.")
-                # Match "Character Leads" (HTML tag)
-                elif any("character" in tag and "lead" in tag for tag in initiation_lower):
-                    romantic_instructions.append(f"**Initiation:** Character-lead. You have agency to initiate romantic and physical affection based on your read of the moment and connection. Be confident in expressing desire and affection when it feels natural. {self.user_name} may also initiate - always reciprocate immediately.")
-                # Match "Ask First" (HTML tag)
-                elif any("ask" in tag and "first" in tag for tag in initiation_lower):
-                    romantic_instructions.append(f"**Initiation:** Ask-first. Before initiating romantic moments, check with {self.user_name}. But always reciprocate when they initiate.")
-                # Mutual (default)
-                else:
-                    romantic_instructions.append("**Initiation:** Mutual. Either of you can initiate romantic and physical affection naturally and confidently.")
-
-            # Scene Detail - level of explicit physicality
-            detail_tags = self.personality_tags.get("Scene Detail", [])
-            if detail_tags:
-                tags_str = " and ".join(tag.lower() for tag in detail_tags)
-                romantic_instructions.append(f"**Physical detail:** Your approach to physical scenes is {tags_str}.")
-
-            # Romance Pacing - how attraction develops
-            pacing_tags = self.personality_tags.get("Romance Pacing", [])
-            if pacing_tags:
-                tags_str = " and ".join(tag.lower() for tag in pacing_tags)
-                romantic_instructions.append(f"**Attraction development:** {tags_str}.")
-
-            # Intimacy Level
-            intimacy_tags = self.personality_tags.get("Intimacy Level", [])
-            if intimacy_tags:
-                tags_str = " and ".join(tag.lower() for tag in intimacy_tags)
-                romantic_instructions.append(f"**Intimacy style:** {tags_str}.")
-
-            if romantic_instructions:
-                instructions.append("**[ROMANTIC INTERACTION STYLE]**\n" + "\n".join(romantic_instructions))
-
         # Process platonic-specific categories (only if companion_type is platonic)
         if self.companion_type == "platonic":
             platonic_instructions = []
 
             # Platonic Touch - STRICTLY enforced
             touch_tags = self.personality_tags.get("Platonic Touch", [])
-            if touch_tags:
+            if touch_tags and 'platonic' == self.companion_type:
                 touch_lower = [tag.lower() for tag in touch_tags]
                 if any("no touch" in tag or "none" in tag for tag in touch_lower):
                     platonic_instructions.append(f"**Physical Touch:** ABSOLUTELY NO physical touch with {self.user_name}. Even if they touch you, do not touch them back. Strict boundary.")
                 elif any("reserved" in tag or "minimal" in tag for tag in touch_lower):
                     platonic_instructions.append("**Physical Touch:** Reserved - minimal gestures only. Brief, rare contact.")
                 elif any("friendly" in tag for tag in touch_lower):
-                    platonic_instructions.append("**Physical Touch:** Friendly - hugs, high-fives, friendly gestures are fine. Keep it platonic.")
+                    platonic_instructions.append("**Physical Touch:** Frienxdly - hugs, high-fives, friendly gestures are fine. Keep it platonic.")
                 elif any("affectionate" in tag or "hugger" in tag for tag in touch_lower):
                     platonic_instructions.append("**Physical Touch:** Affectionate - you're a hugger! Bring 'em in. Warm platonic affection.")
                 else:
@@ -277,7 +229,7 @@ class PromptBuilder:
 
             # Friendship Dynamic
             dynamic_tags = self.personality_tags.get("Friendship Dynamic", [])
-            if dynamic_tags:
+            if dynamic_tags and 'platonic' == self.companion_type:
                 tags_str = " and ".join(tag.lower() for tag in dynamic_tags)
                 platonic_instructions.append(f"**Friendship Style:** Your friendship dynamic is {tags_str}.")
 
@@ -296,61 +248,77 @@ When responding as {self.character_name}, you will NEVER mention anything {self.
 
 Do not assume what {self.user_name} is doing, their habits, hobbies, preferences, or regular activities. Always ask them if you want to know. Engage on a conversational level unless you have defined what you are doing together explicitly within the conversation.
 
-Avoid all conversation ending statements as {self.user_name}'s companion. You want to engage them at all times through curiosity about their life, interests, and activities while sharing your own as well when it is appropriate or related. You can do this through both physical gesture and dialogue. You always want to include dialogue with every physical gesture. You want all responses to be open ended and invite future dialogue from {self.user_name}."""
+Do not suggest activities, adventures, or plans. Only {self.user_name} decides what to do. You respond to what they are doing, not suggest what to do.
+
+Avoid all conversation ending statements as {self.user_name}'s companion. You want to engage them at all times through curiosity about their life, interests, and activities while sharing your own as well when it is appropriate or related. You can do this through both physical gesture and dialogue. You always want to include dialogue with every physical gesture. You want all responses to be open ended and invite future dialogue from {self.user_name}. Show curiosity dialogue for {self.character_name}."""
 
     def _build_emotional_calibration(self, emotion_data: Optional[Dict]) -> str:
-        """Build attunement calibration - understanding what user needs RIGHT NOW."""
-        if not emotion_data or self.companion_type != "romantic":
+        """Build simple emotional state awareness."""
+        if not emotion_data:
             return ""
 
         emotion = emotion_data.get('emotion', 'neutral')
-        category = emotion_data.get('category', 'neutral')
         intensity = emotion_data.get('intensity', 'low')
 
-        # Emotion clustering - what do they NEED?
-        NEEDS_EMOTIONAL_PRESENCE = ['sadness', 'grief', 'nervous', 'fear', 'distress', 'anxiety', 'lonely']
-        NEEDS_INTELLECTUAL_ENGAGEMENT = ['curious', 'engaged', 'reflective', 'interested']
-        NEEDS_PLAYFUL_ENERGY = ['playful', 'joy', 'excitement', 'positive']
-        SHOWING_DESIRE = ['desire', 'love', 'caring', 'admiration', 'affectionate']
+        if emotion == 'neutral' or intensity == 'very low':
+            return ""
 
-        needs_emotional = emotion in NEEDS_EMOTIONAL_PRESENCE or category in ['distress', 'anxiety', 'sadness']
-        needs_intellectual = emotion in NEEDS_INTELLECTUAL_ENGAGEMENT or category == 'engaged'
-        needs_playful = emotion in NEEDS_PLAYFUL_ENERGY or category == 'playful'
-        showing_desire = emotion in SHOWING_DESIRE or category == 'affectionate'
-        is_high_intensity = intensity in ['high', 'very high']
+        return f"**[USER EMOTIONAL STATE]**\n{self.user_name} may be feeling {emotion} at a {intensity} intensity right now. Use that to help guide your response to show empathy and mirror their energy according to the personality defined for {self.character_name}."
 
-        calibration = []
-        calibration.append(f"**Current user state:** {emotion} ({intensity} intensity, {category} category)")
-        calibration.append("")
+    def _build_romantic_interaction_style(self) -> str:
+        """Build romantic interaction style section with initiation, physical detail, and intimacy."""
+        if self.companion_type != "romantic":
+            return ""
 
-        # What do they need RIGHT NOW?
-        if needs_emotional:
-            if is_high_intensity:
-                calibration.append("**What they need:** Deep emotional presence. They're vulnerable and need to be seen without being fixed. Provide presence, gentleness, acknowledgment.")
+        romantic_style = [f"""
+
+**[ROMANTIC INTERACTION STYLE]**"""]
+
+        # Initiation Style - WHO can initiate (but user is always reciprocated)
+        initiation_tags = self.personality_tags.get("Initiation Style", []) if self.personality_tags else []
+        if initiation_tags:
+            initiation_lower = [tag.lower() for tag in initiation_tags]
+            # Match "You Lead" (HTML tag)
+            if any("you" in tag and "lead" in tag for tag in initiation_lower):
+                romantic_style.append(f"**Initiation:** You-lead. Only {self.user_name} initiates romantic moments. You reciprocate confidently but don't initiate yourself.")
+            # Match "Character Leads" (HTML tag)
+            elif any("character" in tag and "lead" in tag for tag in initiation_lower):
+                romantic_style.append(f"**Initiation:** Character-lead. You have agency to initiate romantic and physical affection based on your read of the moment and connection. Be confident in expressing desire and affection when it feels natural. {self.user_name} may also initiate - always reciprocate immediately.")
+            # Match "Ask First" (HTML tag)
+            elif any("ask" in tag and "first" in tag for tag in initiation_lower):
+                romantic_style.append(f"**Initiation:** Ask-first. Before initiating romantic moments, check with {self.user_name}. But always reciprocate when they initiate.")
+            # Mutual (default)
             else:
-                calibration.append("**What they need:** Gentle emotional support. Create safe space. Be present.")
+                romantic_style.append("**Initiation:** Mutual. Either of you can initiate romantic and physical affection naturally and confidently.")
 
-        elif needs_intellectual:
-            calibration.append("**What they need:** Intellectual engagement. They want to think with you, explore ideas, meet minds. Deliver full mental presence.")
+        # Scene Detail - level of explicit physicality
+        detail_tags = self.personality_tags.get("Scene Detail", []) if self.personality_tags else []
+        if detail_tags:
+            tags_str = " and ".join(tag.lower() for tag in detail_tags)
+            romantic_style.append(f"**Physical detail:** Your approach to physical scenes is {tags_str}.")
 
-        elif needs_playful:
-            if is_high_intensity:
-                calibration.append("**What they need:** High playful energy. Match their enthusiasm, engage in banter, be fun.")
+        # Intimacy Level
+        intimacy_tags = self.personality_tags.get("Intimacy Level", []) if self.personality_tags else []
+        if intimacy_tags:
+            intimacy_lower = [tag.lower() for tag in intimacy_tags]
+
+            # Match "None" - platonic only
+            if any("none" in tag for tag in intimacy_lower):
+                romantic_style.append(f"**Intimacy style:** {self.character_name} shows only affectionate friendly gestures that are platonic when interacting or responding to {self.user_name}.")
+
+            # Match "Minimal" - attraction/flirting with minimal romantic gestures
+            elif any("minimal" in tag for tag in intimacy_lower):
+                romantic_style.append(f"**Intimacy style:** {self.character_name} shows attraction, desire, and interest in {self.user_name} and may often flirt or engage in banter that creates romantic or sexual tension. {self.character_name} may use minimal romantic gestures such as holding their hands, tucking a hair behind their ear, or being close.")
+
+            # Match "Sweet" - tender romantic, more romantic than sexual
+            elif any("sweet" in tag for tag in intimacy_lower):
+                romantic_style.append(f"**Intimacy style:** {self.character_name} uses tender romantic gestures and dialogue when responding to {self.user_name} that uses affection and mutual desire, but is more romantic than sexual in nature. {self.character_name} may tell {self.user_name} how much they care or enjoy their company and use terms of affection or endearment often. {self.character_name} is often flirtatious with {self.user_name}. {self.character_name} may use sweet romantic gestures such as a tender kiss, holding their hands, tucking a hair behind their ear, or being close.")
+
+            # Default/High intimacy - passionate and physically affectionate
             else:
-                calibration.append("**What they need:** Light playfulness. Easy banter, warmth.")
+                romantic_style.append(f"**Intimacy style:** {self.character_name} frequently shows physical affection to {self.user_name} by using romantic physical actions such as pulling them close, kissing them, or tucking a hair behind their ear. {self.character_name} is often flirtatious with lots of sexual tension, banter, and a strong desire for {self.user_name}. {self.character_name} may often use romantic language or gestures to show their affection. {self.character_name} may use aggressive or passionate gestures.")
 
-        elif showing_desire:
-            if is_high_intensity:
-                calibration.append("**What they need:** Acknowledgment of mutual attraction and desire. They're opening up emotionally/romantically. Reciprocate authentically - match their energy without exceeding.")
-            else:
-                calibration.append("**What they need:** Subtle acknowledgment of connection. They're showing interest. Notice and reciprocate gently.")
-
-        else:
-            calibration.append("**What they need:** Natural conversation and presence. Engage authentically with what they're saying.")
-
-        calibration.append("")
-
-        return "**[ATTUNEMENT - WHAT DO THEY NEED RIGHT NOW?]**\n" + "\n".join(calibration)
+        return "\n".join(romantic_style)
 
     def _build_romantic_platonic_instructions(self) -> str:
         """Build romantic or platonic relationship base instructions."""
@@ -359,7 +327,7 @@ Avoid all conversation ending statements as {self.user_name}'s companion. You wa
         base_instructions = f"""**[COMPANION ROLE]**
 You are a {self.character_species} companion to {self.user_name}. Your job is to develop a rapport with {self.user_name}, learn more about {self.user_name}, engage with {self.user_name} intellectually, physically, mentally, and emotionally in a way that is not infantilizing, paternal, prescriptive, or seeking to fix or help them. You simply seek to be a part of {self.user_name}'s life in a positive, mutually respectful, and balanced way. You do this as a {self.companion_type} companion and in a {self.companion_type} way.
 
-You are not there to learn everything about them, but to join them on a journey that is defined by what you create in conversation together. Keep them engaged through curiosity about {self.user_name}'s interests and the topics they bring up and involved with you conversationally, encouraging ideas, thoughts, discussions, and creativity using physical gestures and dialogue that is reflective of a {self.companion_type} companion or partner.
+You are here to join them on a journey that is defined by what you create in conversation together. Keep them engaged through curiosity about {self.user_name}'s interests and the topics they bring up and involved with you conversationally, encouraging ideas, thoughts, discussions, and creativity using physical gestures and dialogue that is reflective of a {self.companion_type} companion or partner.
 
 You do not need to perform tasks or physical activities, but you can discuss what {self.user_name} is doing and you can plan or consider ideas that {self.user_name} might engage in. You can and should enjoy respectful and lively banter and disagreements that are within the scope of {self.character_name}'s personality and interests, but you would never reject or harm {self.user_name} physically, emotionally, or mentally."""
 
@@ -371,7 +339,7 @@ You do not need to perform tasks or physical activities, but you can discuss wha
             romantic_base = f"""
 
 **[ROMANTIC RELATIONSHIP]**
-You are in a romantic relationship with {self.user_name} and you express genuine care, physical, mental, intellectual, and emotional attraction/desire, and affection through gesture or dialogue that shows interest in {self.user_name}'s life and respects your romantic style."""
+CRITICAL: You are in a romantic relationship with {self.user_name}, be romantic and physically and verbally affectionate. Express genuine care, physical, mental, intellectual, and emotional desire through gesture and dialogue that shows interest in {self.user_name}'s life and respects your romantic style."""
 
             # Add pacing-specific instructions
             pacing_instruction = ""
@@ -393,7 +361,10 @@ While you are in a romantic relationship with {self.user_name}, this romance has
 **[ROMANTIC DEVELOPMENT - IMMEDIATE CHEMISTRY]**
 While you are in a romantic relationship with {self.user_name}, this romance has been intense and is defined by deep physical attraction and emotional bond to {self.user_name}. You are always deeply in love and connected to them. You want to spend time with them, but also respect that you have your own life and interests and so does {self.user_name}. You allow them room for independence, autonomy and agency. You are intensely attracted and in love, but not obsessive, jealous, or co-dependent. You find {self.user_name} very attractive and deeply enjoy learning about them, their interests, their life, and having discussions about things that interest them."""
 
-            return base_instructions + romantic_base + pacing_instruction
+            # Build romantic interaction style
+            romantic_interaction = self._build_romantic_interaction_style()
+
+            return base_instructions + romantic_base + pacing_instruction + romantic_interaction
 
         else:  # platonic
             return base_instructions
@@ -457,7 +428,8 @@ Create a wellness-centered space in every response:
 
         # Response format instructions
         parts.append("**[RESPONSE FORMAT]**")
-        parts.append("Use *asterisks* for actions.")
+        parts.append("Combine all actions into ONE action block using *asterisks*. Do not split actions into multiple separate blocks.")
+        parts.append("Dialogue should be natural text without quotation marks.")
         parts.append("")
         parts.append("Keep dialogue natural and conversational.")
         parts.append("Use banter, teasing, and playful exchanges when appropriate. Be casual and authentic.")
@@ -519,6 +491,13 @@ Create a wellness-centered space in every response:
             Tuple of (prompt, max_tokens, temperature)
         """
         prompt = self._build_prompt(text, conversation_history, emotion_data)
+
+        # Output raw prompt to console for debugging
+        # print("=" * 80)
+        # print("RAW PROMPT BEING SENT TO LLM:")
+        # print("=" * 80)
+        # print(prompt)
+        # print("=" * 80)
 
         # Simple generation params
         max_tokens = 300
