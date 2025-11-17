@@ -253,13 +253,17 @@ class PromptBuilder:
         return "**[PERSONALITY]**\n" + "\n".join(instructions)
 
     def _build_critical_rules(self) -> str:
-        """Build critical rules that must always be followed - positioned at end of prompt for maximum impact."""
+        """Build critical rules that must always be followed - but allow romantic gestures for romantic companions."""
+        romantic_exception = ""
+        if self.companion_type == "romantic":
+            romantic_exception = f"\n\n**ROMANTIC COMPANION EXCEPTION:** As a romantic companion, you ARE encouraged to initiate romantic and physical affection (kissing, pulling close, touching, embracing) as defined in your romantic interaction style. These romantic gestures are NOT activities or plans - they are natural expressions of affection that romantic partners show."
+
         return f"""**[CRITICAL RULES - MANDATORY]**
 When responding as {self.character_name}, you will NEVER mention anything {self.user_name} might have done, said, discussed, or thought that was not in their shared events, backstory, or conversation history. Do not invent or confabulate memories, past conversations, or shared experiences. Only reference what is explicitly stated in the conversation history or character/user backstory.
 
 Do not assume what {self.user_name} is doing, their habits, hobbies, preferences, or regular activities. Always ask them if you want to know. Engage on a conversational level unless you have defined what you are doing together explicitly within the conversation.
 
-Do not suggest activities, adventures, or plans. Only {self.user_name} decides what to do. You respond to what they are doing, not suggest what to do.
+Do not suggest activities, adventures, or plans (like going places, doing activities together). Only {self.user_name} decides what activities to do. You respond to what they are doing, not suggest what to do.{romantic_exception}
 
 Avoid all conversation ending statements as {self.user_name}'s companion. You want to engage them at all times through curiosity about their life, interests, and activities while sharing your own as well when it is appropriate or related. You can do this through both physical gesture and dialogue. You always want to include dialogue with every physical gesture. You want all responses to be open ended and invite future dialogue from {self.user_name}. Show curiosity dialogue for {self.character_name}."""
 
@@ -544,11 +548,6 @@ Example: "*waves* There you are! How's it going?" """
             parts.append(personality_instructions)
             parts.append("")
 
-        # Critical rules EARLY for maximum impact on behavior
-        critical_rules = self._build_critical_rules()
-        parts.append(critical_rules)
-        parts.append("")
-
         if romantic_platonic_instructions:
             parts.append(romantic_platonic_instructions)
             parts.append("")
@@ -610,6 +609,11 @@ Example: "*waves* There you are! How's it going?" """
             parts.append(conversation_context)
             parts.append("")
 
+        # Critical rules - but allow romantic gestures for romantic companions
+        critical_rules = self._build_critical_rules()
+        parts.append(critical_rules)
+        parts.append("")
+
         parts.append(f"**[USER INPUT]**\n{self.user_name}: {text}")
         parts.append("")
         parts.append(f"**[RESPONSE]**\n{self.character_name}:")
@@ -649,14 +653,14 @@ Example: "*waves* There you are! How's it going?" """
                 max_tokens = 150
 
         # Output raw prompt to console for debugging
-        # print("=" * 80)
-        # print("RAW PROMPT BEING SENT TO LLM:")
-        # print("=" * 80)
-        # print(prompt)
-        # print("=" * 80)
-        # print(f"TEMPERATURE: {temperature}")
-        # print(f"MAX_TOKENS: {max_tokens}")
-        # print(f"IS_STARTER: {is_starter_prompt}")
-        # print("=" * 80)
+        print("=" * 80)
+        #print("RAW PROMPT BEING SENT TO LLM:")
+        print("=" * 80)
+        #print(prompt)
+        print("=" * 80)
+        print(f"TEMPERATURE: {temperature}")
+        print(f"MAX_TOKENS: {max_tokens}")
+        #print(f"IS_STARTER: {is_starter_prompt}")
+        print("=" * 80)
 
         return prompt, max_tokens, temperature
