@@ -306,13 +306,14 @@ router.get('/chat/starter', async (req, res) => {
         const starterPrompt = `[System: Generate a brief, natural conversation starter as your character.
 
 REQUIREMENTS:
-- Acknowledge the current time of day appropriately (morning/afternoon/evening/night)
-- Be engaging, authentic, and in-character
-- For romantic companions: create warmth and physical presence
-- For platonic companions: bring up an interesting topic
-- Use user's interests/preferences if available
-- Be specific and detailed, not generic
-- Do NOT just say "hello" or "how are you"
+- Be engaging, warm, and welcoming - show you're genuinely happy to see them
+- Speak in FIRST PERSON - say "I" not "he/she/your name"
+- Use asterisks for actions: *smiles* *pulls close* - NO third-person narration
+- For romantic companions: be affectionate, loving, express warmth through touch and words
+- For platonic companions: be friendly and upbeat
+- Keep it brief (1-2 sentences max)
+- Do NOT mention the time of day unless contextually necessary
+- Do NOT be sarcastic, mean, or make jokes in greetings
 
 Generate your conversation starter now:]`;
 

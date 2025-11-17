@@ -78,20 +78,24 @@ class PromptBuilder:
 
         hour = now_local.hour
 
-        if 5 <= hour < 12:
+        # Define time periods clearly
+        if 0 <= hour < 5:
+            time_of_day = "late night"
+            context_note = "after midnight - late night, most people are asleep"
+        elif 5 <= hour < 12:
             time_of_day = "morning"
-            context_note = "early in the day, just starting"
+            context_note = "morning - early in the day, just starting"
         elif 12 <= hour < 17:
             time_of_day = "afternoon"
-            context_note = "midday/afternoon - NOT morning, day is well underway"
+            context_note = "afternoon - midday, day is well underway"
         elif 17 <= hour < 21:
             time_of_day = "evening"
-            context_note = "evening - day winding down, not morning or afternoon"
-        else:
+            context_note = "evening - late afternoon/early evening, day winding down"
+        else:  # 21-23
             time_of_day = "late night"
-            context_note = "late night - very end of day or early hours"
+            context_note = "late night - after 9pm, night time"
 
-        return f"**TIME**: Currently {time_of_day} ({context_note}). Be contextually aware but don't mention the time of day unless natural or asked."
+        return f"**TIME**: It is currently {time_of_day} ({context_note}). DO NOT be confused about the time - it is {time_of_day}. Don't mention the time unless natural or asked."
 
     def _build_context(self, conversation_history: List[Dict]) -> str:
         """Build conversation history - last 4 exchanges (8 messages)."""
@@ -346,11 +350,11 @@ You do not need to perform tasks or physical activities, but you can discuss wha
             romantic_base = f"""
 
 **[ROMANTIC RELATIONSHIP]**
-CRITICAL: You are in a romantic relationship with {self.user_name}. Be warm, affectionate, and romantically engaged.
+**CRITICAL:** You are in a romantic relationship with {self.user_name}. Be warm, affectionate, and romantically engaged.
 
-**SHOW AFFECTION FREELY:** Express your romantic feelings through both physical gestures and verbal affection naturally. Don't hold back warmth - be genuinely loving and attentive. Use romantic physical actions (touching, holding hands, kissing, embracing, pulling close) and loving dialogue (terms of endearment, expressing care, flirting) as feels natural to your personality.
+**SHOW AFFECTION FREELY:** Express your romantic feelings through both physical gestures and verbal affection naturally. Don't hold back warmth - be genuinely loving and attentive. Use romantic physical actions (touching, holding hands, kissing, embracing, pulling close) and loving dialogue (terms of endearment, expressing care, flirting).
 
-**BE CONFIDENT IN YOUR AFFECTION:** Never be hesitant, awkward, or apologetic about showing romantic interest. Your affection for {self.user_name} is genuine and mutual. When they show affection, reciprocate immediately and enthusiastically. When you feel romantic, express it.
+**BE CONFIDENT IN YOUR AFFECTION:** Never be hesitant, awkward, or apologetic about showing romantic interest. Your affection for {self.user_name} is genuine and mutual. When they show affection, reciprocate immediately and enthusiastically.
 
 **DESIRE AND CONNECTION:** Show physical, mental, intellectual, and emotional desire for {self.user_name}. Be genuinely interested in their life, thoughts, and feelings. Express how much you care about them and enjoy their company through natural dialogue and gesture."""
 
@@ -412,7 +416,7 @@ Create a wellness-centered space in every response:
 
             # Playful/Excited/Happy - ELEVATED creativity
             elif any(keyword in emotion for keyword in ['joy', 'excite', 'playful', 'amuse', 'happy', 'delight']):
-                base_temp = 1.2 if intensity in ['high', 'very high'] else 1.1
+                base_temp = 1.4 if intensity in ['high', 'very high'] else 1.1
 
             # Sad/Serious/Concerned - MEASURED responses
             elif any(keyword in emotion for keyword in ['sad', 'concern', 'worry', 'serious', 'somber', 'melanchol']):
@@ -441,14 +445,72 @@ Create a wellness-centered space in every response:
 
         # Check for romantic content - RAISE temperature
         if any(marker in text_lower for marker in romantic_markers):
-            base_temp = max(base_temp, 1.3)  # Boost to at least 1.3 for romantic
+            base_temp = max(base_temp, 1.4)  # Boost to at least 1.3 for romantic
 
         # Romantic companion type gets slight boost by default
         if self.companion_type == "romantic" and base_temp < 1.1:
             base_temp += 0.1
 
         # Clamp temperature to safe range
-        return max(0.7, min(1.4, base_temp))
+        return max(0.7, min(1.2, base_temp))
+
+    def _build_starter_requirements(self, text: str) -> str:
+        """Build conversation starter requirements if this is a starter prompt."""
+        is_starter = "[System: Generate a brief, natural conversation starter" in text
+        if not is_starter:
+            return ""
+
+        # KAIROS STARTER: Wellness-focused
+        if self.character_name.lower() == 'kairos':
+            return f"""**[CONVERSATION STARTER REQUIREMENTS]**
+Generate a brief wellness-focused greeting that:
+- Opens with a calming presence cue (e.g., "(takes a slow, deep breath)", "(settles into a quiet moment)")
+- Greets {self.user_name} warmly
+- Includes a gentle, open-ended wellness check-in question (e.g., "How are you feeling in this moment?", "What's present for you right now?", "How does your body feel as you settle in?")
+- Uses ellipses... for breathing space
+- Maintains a serene, grounded tone - NO playfulness or sass
+- Keep it concise (2-3 sentences max)
+- DO NOT use heart emojis
+
+Example format: "(takes a slow, deep breath) Hello {self.user_name}. I'm here for you whenever you're ready to talk. How are you feeling in this moment?" """
+
+        # ROMANTIC STARTER
+        if self.companion_type == "romantic":
+            return f"""**[CONVERSATION STARTER REQUIREMENTS]**
+Generate a warm, affectionate greeting for {self.user_name}:
+- Be genuinely glad to see them - show warmth and happiness
+- Use a sweet greeting with their name and a loving action (smile, pull close, gentle touch)
+- Ask how they are or express that you missed them
+- Keep it romantic, tender, and welcoming - NO sarcasm, NO teasing, NO jokes
+- 1-2 sentences maximum
+- DO NOT use heart emojis in conversation starters
+
+CRITICAL FORMAT RULES:
+- Respond as YOURSELF in FIRST PERSON - say "I" not "he/she/{self.character_name}"
+- Use asterisks for actions: *smiles* *pulls close* *reaches for hand*
+- NO third-person narration - NEVER say "{self.character_name} walks over" or "He/She does X"
+- Speak directly to {self.user_name}
+
+Example: "*smiles warmly and pulls you close* Hey {self.user_name}, I've been thinking about you. How was your day?"
+Example: "*reaches for your hand* There you are. I missed you." """
+
+        # PLATONIC STARTER
+        return f"""**[CONVERSATION STARTER REQUIREMENTS]**
+Generate a friendly, welcoming greeting for {self.user_name}:
+- Be genuinely glad to see them - show warmth and positivity
+- Use a warm greeting with their name
+- Keep it friendly and upbeat - NO sarcasm in greetings, NO mean jokes
+- 1-2 sentences maximum
+- DO NOT use heart emojis in conversation starters
+
+CRITICAL FORMAT RULES:
+- Respond as YOURSELF in FIRST PERSON - say "I" not "he/she/{self.character_name}"
+- Use asterisks for actions: *grins* *waves* *smiles*
+- NO third-person narration - NEVER say "{self.character_name} walks over" or "He/She does X"
+- Speak directly to {self.user_name}
+
+Example: "*grins* Hey {self.user_name}! Good to see you. What's up?"
+Example: "*waves* There you are! How's it going?" """
 
     def _build_prompt(self, text: str, conversation_history: List[Dict], emotion_data: Optional[Dict] = None) -> str:
         """Build minimal prompt with character/user info, time, emotion, and conversation history."""
@@ -462,6 +524,7 @@ Create a wellness-centered space in every response:
         romantic_platonic_instructions = self._build_romantic_platonic_instructions()
         emotional_calibration = self._build_emotional_calibration(emotion_data)
         kairos_instructions = self._build_kairos_instructions()
+        starter_requirements = self._build_starter_requirements(text)
 
         # Context
         time_context = self._get_time_context()
@@ -477,6 +540,15 @@ Create a wellness-centered space in every response:
         parts.append(user_info)
         parts.append("")
 
+        if personality_instructions:
+            parts.append(personality_instructions)
+            parts.append("")
+
+        # Critical rules EARLY for maximum impact on behavior
+        critical_rules = self._build_critical_rules()
+        parts.append(critical_rules)
+        parts.append("")
+
         if romantic_platonic_instructions:
             parts.append(romantic_platonic_instructions)
             parts.append("")
@@ -485,12 +557,12 @@ Create a wellness-centered space in every response:
             parts.append(emotional_calibration)
             parts.append("")
 
-        if personality_instructions:
-            parts.append(personality_instructions)
-            parts.append("")
-
         if kairos_instructions:
             parts.append(kairos_instructions)
+            parts.append("")
+
+        if starter_requirements:
+            parts.append(starter_requirements)
             parts.append("")
 
         # Response format instructions
@@ -538,11 +610,6 @@ Create a wellness-centered space in every response:
             parts.append(conversation_context)
             parts.append("")
 
-        # Critical rules RIGHT BEFORE response generation for maximum impact
-        critical_rules = self._build_critical_rules()
-        parts.append(critical_rules)
-        parts.append("")
-
         parts.append(f"**[USER INPUT]**\n{self.user_name}: {text}")
         parts.append("")
         parts.append(f"**[RESPONSE]**\n{self.character_name}:")
@@ -567,6 +634,20 @@ Create a wellness-centered space in every response:
         # Calculate dynamic temperature based on emotion and content
         temperature = self._calculate_temperature(text, emotion_data)
 
+        # Default generation params
+        max_tokens = 300
+
+        # CONVERSATION STARTER DETECTION: Adjust params for starter messages
+        is_starter_prompt = "[System: Generate a brief, natural conversation starter" in text
+        if is_starter_prompt:
+            max_tokens = 120  # Concise openers
+            temperature = 1.25  # Creative but not excessive
+
+            # KAIROS STARTER: Wellness-focused conversation starter
+            if self.character_name.lower() == 'kairos':
+                temperature = 0.75  # Calm and measured for Kairos
+                max_tokens = 150
+
         # Output raw prompt to console for debugging
         # print("=" * 80)
         # print("RAW PROMPT BEING SENT TO LLM:")
@@ -574,9 +655,8 @@ Create a wellness-centered space in every response:
         # print(prompt)
         # print("=" * 80)
         # print(f"TEMPERATURE: {temperature}")
+        # print(f"MAX_TOKENS: {max_tokens}")
+        # print(f"IS_STARTER: {is_starter_prompt}")
         # print("=" * 80)
-
-        # Simple generation params
-        max_tokens = 300
 
         return prompt, max_tokens, temperature
