@@ -14,6 +14,7 @@ export async function loadUserSettings(encryptionKey = null) {
     const defaults = {
         userName: "User",
         userGender: "non-binary",
+        userSpecies: "human",
         timezone: "UTC",
         userBackstory: "",
         userPreferences: {
@@ -24,6 +25,7 @@ export async function loadUserSettings(encryptionKey = null) {
             other: ""
         },
         majorLifeEvents: [],
+        communicationBoundaries: "",
         enableMemory: envConfig.features.enableMemory,  // From env by default
         enableWebSearch: envConfig.features.enableWebSearch  // From env by default
     };
@@ -52,11 +54,13 @@ export async function loadUserSettings(encryptionKey = null) {
                 return {
                     userName: data.user.name || defaults.userName,
                     userGender: data.user.gender || defaults.userGender,
+                    userSpecies: data.user.species || defaults.userSpecies,
                     timezone: data.user.timezone || defaults.timezone,
                     userBackstory: data.user.backstory || defaults.userBackstory,
                     userPreferences: data.user.preferences || defaults.userPreferences,
                     majorLifeEvents: data.user.majorLifeEvents || defaults.majorLifeEvents,
-                    sharedRoleplayEvents: data.sharedMemory?.roleplayEvents || defaults.sharedRoleplayEvents,
+                    communicationBoundaries: data.user.communicationBoundaries || defaults.communicationBoundaries,
+                    sharedRoleplayEvents: data.sharedMemory?.roleplayEvents || [],
                     // User preferences override env config
                     enableMemory: data.settings?.enableMemory ?? defaults.enableMemory,
                     enableWebSearch: data.settings?.enableWebSearch ?? defaults.enableWebSearch
@@ -218,6 +222,9 @@ export async function loadActiveCharacter(specificCharacterName = null, encrypti
         const gender = profile.gender || 'unknown';
         const role = profile.role || '';
         const backstory = profile.backstory || '';
+        const setting = profile.setting || '';
+        const goal = profile.goal || '';
+        const status = profile.status || '';
         const lorebook = profile.lorebook || {};
         const tagSelections = profile.tagSelections || {};
 
@@ -233,6 +240,9 @@ export async function loadActiveCharacter(specificCharacterName = null, encrypti
             gender,
             role,
             backstory,
+            setting,
+            goal,
+            status,
             lorebook,
             tagSelections
         };
@@ -265,28 +275,20 @@ function parseProfile(content) {
 }
 /**
  * Format profile dictionary into character string
+ * This is a simple pass-through - the actual prompt formatting happens in Python
  */
 function formatCharacterProfile(profile) {
     const companionType = profile.companionType === 'friend' ? 'Platonic' : 'Romantic';
 
-    // Build the profile string, including personality kernel if present
+    // Simple format - the Python prompt_builder.py handles the actual prompt construction
     let profileString = `Character Profile: ${profile.name || 'Unknown'}
 
 Gender: ${profile.gender || 'Unknown'}
 Age: ${profile.age || 'Unknown'}
+Species: ${profile.species || 'Human'}
 Role: ${profile.role || ''}
 Companion Type: ${companionType}
-`;
 
-    // Add personality kernel at the top if it exists (high priority)
-    if (profile.personalityKernel && profile.personalityKernel.trim()) {
-        profileString += `
-**CORE PERSONALITY (CRITICAL - OVERRIDE ALL DEFAULTS):**
-${profile.personalityKernel}
-`;
-    }
-
-    profileString += `
 Appearance:
 ${profile.appearance || ''}
 
@@ -298,12 +300,6 @@ ${profile.interests || ''}
 
 Backstory:
 ${profile.backstory || ''}
-
-Communication Style:
-${profile.communicationStyle || ''}
-
-Affection Style:
-${profile.affectionStyle || ''}
 
 Communication Boundaries:
 ${profile.boundaries || ''}

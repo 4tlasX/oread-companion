@@ -419,6 +419,9 @@ function loadDefaultProfile() {
     document.getElementById('echoTraits').value = '';
     document.getElementById('echoInterests').value = '';
     document.getElementById('echoBackstory').value = '';
+    document.getElementById('echoSetting').value = '';
+    document.getElementById('echoGoal').value = '';
+    document.getElementById('echoStatus').value = '';
     document.getElementById('echoBoundaries').value = '';
     document.getElementById('echoAvoidWords').value = '';
     clearAvatar();
@@ -458,6 +461,9 @@ async function loadProfileData(profileName) {
         document.getElementById('echoTraits').value = profile.traits || '';
         document.getElementById('echoInterests').value = profile.interests || '';
         document.getElementById('echoBackstory').value = profile.backstory || '';
+        document.getElementById('echoSetting').value = profile.setting || '';
+        document.getElementById('echoGoal').value = profile.goal || '';
+        document.getElementById('echoStatus').value = profile.status || '';
         document.getElementById('echoBoundaries').value = profile.boundaries || '';
         document.getElementById('echoAvoidWords').value = profile.avoidWords || '';
 
@@ -505,6 +511,9 @@ function getCurrentFormData() {
         traits: document.getElementById('echoTraits').value,
         interests: document.getElementById('echoInterests').value,
         backstory: document.getElementById('echoBackstory').value,
+        setting: document.getElementById('echoSetting').value,
+        goal: document.getElementById('echoGoal').value,
+        status: document.getElementById('echoStatus').value,
         boundaries: document.getElementById('echoBoundaries').value,
         avoidWords: document.getElementById('echoAvoidWords').value,
         tagSelections: getSelectedTags()

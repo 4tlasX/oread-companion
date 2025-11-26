@@ -492,6 +492,12 @@ class LLMProcessor:
                 character_species = character_profile.get('species', 'Human')
                 character_age = character_profile.get('age', 25)
                 character_interests = character_profile.get('interests', '')
+                character_appearance = character_profile.get('appearance', '')
+
+                # Extract Scene Brief fields (setting, goal, status)
+                character_setting = character_profile.get('setting', '')
+                character_goal = character_profile.get('goal', '')
+                character_status = character_profile.get('status', '')
 
                 # Extract user settings from character_profile (Node.js merged them in)
                 user_name = character_profile.get('user_name', character_profile.get('userName', 'User'))
@@ -539,7 +545,12 @@ class LLMProcessor:
                     character_species=character_species,
                     character_age=character_age,
                     character_interests=character_interests,
-                    character_boundaries=character_boundaries
+                    character_boundaries=character_boundaries,
+                    character_appearance=character_appearance,
+                    # Scene Brief fields
+                    character_setting=character_setting,
+                    character_goal=character_goal,
+                    character_status=character_status
                 )
 
                 # Create ResponseCleaner with fresh avoid_words from Node.js (never cached)

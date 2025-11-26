@@ -62,7 +62,7 @@ class LorebookGenerator:
         # 2. For each category, get templates for selected tags
         for category, tags in selected_tags.items():
             for tag in tags:
-                template = self.templates.get_template_by_ui_tag(tag, category)
+                template = self.templates.get_template_by_ui_tag(tag)
                 if template:
                     # V4 format: Templates have emotion_responses instead of static content
                     # Pass the entire template structure for dynamic retrieval
