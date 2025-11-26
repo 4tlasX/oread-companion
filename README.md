@@ -98,7 +98,7 @@ Give your AI a bit of personality. The idea is to provide a model agnostic inter
 
 ## Safety & Ethics (The Important Stuff)
 
-> For the full philosophy behind these protections, see [Philosophy: Shared Responsibility](#philosophy-shared-responsibility) above and [SECURITY_ETHICS_SAFETY.md](SECURITY_ETHICS_SAFETY.md).
+> See [SECURITY_ETHICS_SAFETY.md](SECURITY_ETHICS_SAFETY.md).
 
 ---
 
