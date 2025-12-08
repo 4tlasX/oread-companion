@@ -277,7 +277,7 @@ pip install -r requirements.txt
 
 **For CUDA support:**
 ```bash
-CMAKE_ARGS="-DLLAMA_CUBLAS=on" pip install llama-cpp-python --force-reinstall --no-cache-dir
+CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python --force-reinstall --no-cache-dir
 ```
 
 **For ROCm support:**
