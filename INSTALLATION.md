@@ -992,7 +992,7 @@ CMAKE_ARGS="-DLLAMA_METAL=on" pip install llama-cpp-python --force-reinstall --n
 nvcc --version
 
 # Force reinstall with CUDA support
-CMAKE_ARGS="-DLLAMA_CUBLAS=on" pip install llama-cpp-python --force-reinstall --no-cache-dir
+CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python --force-reinstall --no-cache-dir
 ```
 
 **Linux Solution (CPU only):**
