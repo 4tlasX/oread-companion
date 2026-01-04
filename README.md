@@ -1,5 +1,7 @@
 # Oread - Your Privacy-First, AI Interface
 
+** This app is still in development **
+
 <div align="center">
 
 **Self-hosted AI interface that actually respects your privacy**
