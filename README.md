@@ -1,4 +1,4 @@
-# Oread - Your Privacy-First, AI Interface
+# Oread - Your Privacy-First, AI Interface ( MVP - Proof of Concept - in rebuild ) 
 
 ** This app is still in development **
 
